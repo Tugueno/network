@@ -32,10 +32,6 @@ class AuthController extends GetxController {
 
   // onClose-д dispose хийхгүй — GetX өөрөө удирдана
   // dispose хийвэл fenix дахин ашиглах үед алдаа гарна
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
   // ── SharedPreferences-аас уншина ──────────────────
   Future<void> _loadRemembered() async {
@@ -64,14 +60,16 @@ class AuthController extends GetxController {
     final pw = passwordController.text;
 
     String? eErr, pErr;
-    if (email.isEmpty)
+    if (email.isEmpty) {
       eErr = 'Имайл оруулна уу';
-    else if (!email.contains('@'))
+    } else if (!email.contains('@')) {
       eErr = 'Имайл формат буруу байна';
-    if (pw.isEmpty)
+    }
+    if (pw.isEmpty) {
       pErr = 'Нууц үг оруулна уу';
-    else if (pw.length < 6)
+    } else if (pw.length < 6) {
       pErr = 'Нууц үг хэтэрхий богино байна';
+    }
 
     if (eErr != null || pErr != null) {
       emailError.value = eErr;

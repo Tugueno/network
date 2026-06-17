@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ncapp/core/widgets/app_text.dart';
 import 'package:ncapp/core/widgets/empty_state.dart';
-import 'package:ncapp/features/payment_req/payment_req_controller.dart';
-import 'package:ncapp/features/payment_req/payment_req_model.dart';
-import 'package:ncapp/features/payment_req/payment_req_status_ui.dart';
+import 'package:ncapp/features/payment_req/controllers/payment_req_controller.dart';
+import 'package:ncapp/features/payment_req/models/payment_req_model.dart';
+import 'package:ncapp/features/payment_req/widgets/payment_req_status_ui.dart';
 import 'package:ncapp/core/widgets/app_chip.dart';
 import 'package:ncapp/theme/app_theme.dart';
 import 'package:ncapp/widgets/app_scaffold.dart';
 import 'package:ncapp/widgets/department_tag.dart';
 import 'payment_req_period_sheet.dart';
+import 'payment_req_detail_view.dart';
 import 'package:ncapp/core/widgets/app_card.dart';
 
 class PaymentReqView extends GetView<PaymentReqController> {
@@ -19,47 +20,74 @@ class PaymentReqView extends GetView<PaymentReqController> {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: 'Төлбөрийн хүсэлт',
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (controller.items.isEmpty) {
-          return const EmptyState(
-            icon: Icons.swap_horiz_rounded,
-            title: 'Танд төлбөрийн хүсэлт\nодоогоор байхгүй байна',
-            subtitle: 'Төлбөрийн хүсэлт ирмэгц танд\nмэдэгдэх болно...',
-          );
-        }
-        final filtered = controller.filtered;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _FilterHeader(
-              sheetOpen: controller.periodSheetOpen.value,
-              onMonthTap: () => _showPeriodSheet(context),
-            ),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-                children: [
-                  _TotalCard(
-                    status: controller.selectedFilter.value,
-                    label: controller.totalLabel,
-                    total: controller.formattedFilteredTotal,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isWide = constraints.maxWidth >= 720;
+          return Obx(() {
+            if (controller.isLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (controller.items.isEmpty) {
+              return const EmptyState(
+                icon: Icons.swap_horiz_rounded,
+                title: 'Танд төлбөрийн хүсэлт\nодоогоор байхгүй байна',
+                subtitle: 'Төлбөрийн хүсэлт ирмэгц танд\nмэдэгдэх болно...',
+              );
+            }
+            final filtered = controller.filtered;
+            final listCol = Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _FilterHeader(
+                  sheetOpen: controller.periodSheetOpen.value,
+                  onMonthTap: () => _showPeriodSheet(context),
+                ),
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                    children: [
+                      _TotalCard(
+                        status: controller.selectedFilter.value,
+                        label: controller.totalLabel,
+                        total: controller.formattedFilteredTotal,
+                      ),
+                      const SizedBox(height: 20),
+                      _SectionTitle(controller.sectionTitle),
+                      const SizedBox(height: 12),
+                      _RequestList(
+                        items: filtered,
+                        onTap: controller.openDetail,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 20),
-                  _SectionTitle(controller.sectionTitle),
-                  const SizedBox(height: 12),
-                  _RequestList(
-                    items: filtered,
-                    onTap: controller.openDetail,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
-      }),
+                ),
+              ],
+            );
+
+            if (!isWide) return listCol;
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(width: 380, child: listCol),
+                const VerticalDivider(
+                    width: 1, thickness: 1, color: AppTheme.borderColor),
+                Expanded(
+                  child: controller.selectedItem.value == null
+                      ? const Center(
+                          child: Text(
+                            'Нэг хүсэлт сонгоно уу!',
+                            style: TextStyle(
+                                fontSize: 14, color: AppTheme.textGrey),
+                          ),
+                        )
+                      : const PaymentReqDetailView(),
+                ),
+              ],
+            );
+          });
+        },
+      ),
     );
   }
 

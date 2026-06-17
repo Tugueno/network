@@ -20,10 +20,13 @@ class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Дэвсгэр өнгө. Ихэнх дэлгэц цайвар саарал (`0xFFF5F6FC`), зарим нь цагаан.
   final Color backgroundColor;
 
+  final VoidCallback? onBack;
+
   const BackAppBar({
     super.key,
     required this.title,
     this.backgroundColor = const Color(0xFFF5F6FC),
+    this.onBack,
   });
 
   @override
@@ -39,7 +42,7 @@ class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios,
             size: 18, color: AppTheme.textDark),
-        onPressed: () => Get.back(),
+        onPressed: onBack ?? () => Get.back(),
       ),
       title: Text(
         title,

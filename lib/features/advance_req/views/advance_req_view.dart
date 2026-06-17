@@ -7,6 +7,7 @@ import 'package:ncapp/features/advance_req/advance_req_model.dart';
 import 'package:ncapp/core/utils/format.dart';
 import 'package:ncapp/theme/app_theme.dart';
 import 'package:ncapp/widgets/app_scaffold.dart';
+import 'advance_req_detail_view.dart';
 
 class AdvanceReqView extends GetView<AdvanceReqController> {
   const AdvanceReqView({super.key});
@@ -15,19 +16,47 @@ class AdvanceReqView extends GetView<AdvanceReqController> {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: 'Урдчилгаа хаах',
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (controller.items.isEmpty) {
-          return const EmptyState(
-            icon: Icons.receipt_long_outlined,
-            title: 'Та төлбөрийн хүсэлт\nүүсгээгүй байна.',
-            subtitle: 'NetBase-руугаа орж\nтөлбөрийн хүсэлтээ үүсгэнэ үү.',
-          );
-        }
-        return _buildList();
-      }),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isWide = constraints.maxWidth >= 720;
+          return Obx(() {
+            if (controller.isLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (controller.items.isEmpty) {
+              return const EmptyState(
+                icon: Icons.receipt_long_outlined,
+                title: 'Та төлбөрийн хүсэлт\nүүсгээгүй байна.',
+                subtitle: 'NetBase-руугаа орж\nтөлбөрийн хүсэлтээ үүсгэнэ үү.',
+              );
+            }
+
+            final listCol = _buildList();
+
+            if (!isWide) return listCol;
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(width: 380, child: listCol),
+                const VerticalDivider(
+                    width: 1, thickness: 1, color: AppTheme.borderColor),
+                Expanded(
+                  child: controller.selectedItem.value == null
+                      ? const Center(
+                          child: Text(
+                            'Хүсэлт сонгоно уу',
+                            style: TextStyle(
+                                fontSize: 14, color: AppTheme.textGrey),
+                          ),
+                        )
+                      : const AdvanceReqDetailView(),
+                ),
+              ],
+            );
+          });
+        },
+      ),
     );
   }
 
@@ -39,17 +68,13 @@ class AdvanceReqView extends GetView<AdvanceReqController> {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       children: [
         if (pending.isNotEmpty) ...[
-          _SectionHeader(
-            label: 'Үлдэгдэлтэй нийт ${pending.length}',
-          ),
+          _SectionHeader(label: 'Үлдэгдэлтэй нийт ${pending.length}'),
           const SizedBox(height: 8),
           _ItemGroup(items: pending),
           const SizedBox(height: 20),
         ],
         if (closed.isNotEmpty) ...[
-          _SectionHeader(
-            label: 'Хаасан нийт ${closed.length}',
-          ),
+          _SectionHeader(label: 'Хаасан нийт ${closed.length}'),
           const SizedBox(height: 8),
           _ItemGroup(items: closed),
         ],

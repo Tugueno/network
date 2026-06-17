@@ -4,8 +4,9 @@
 // ═══════════════════════════════════════════════════════
 abstract class AppRoutes {
   static const auth = '/auth';
-  static const home = '/home';
   static const biometric = '/biometric';
+  static const home = '/home';
+  static const shell = '/shell';
   static const requests = '/requests';
   static const paymentreq = '/paymentreq';
   static const paymentreqDetail = '/paymentreq/detail';

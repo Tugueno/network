@@ -58,7 +58,7 @@ class RequestsView extends GetView<RequestsController> {
                     return ListView.separated(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
                       itemCount: list.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 10),
+                      separatorBuilder: (_, _) => const SizedBox(height: 10),
                       itemBuilder: (_, i) => _RequestCard(
                         item: list[i],
                         onTap: () => controller.toggleSelect(list[i].id),
@@ -635,7 +635,7 @@ class _ConfirmSheet extends StatelessWidget {
               child: ListView.separated(
                 shrinkWrap: true,
                 itemCount: items.length,
-                separatorBuilder: (_, __) =>
+                separatorBuilder: (_, _) =>
                     const Divider(height: 1, color: Color(0xFFF0F0F0)),
                 itemBuilder: (_, i) => _ConfirmItem(item: items[i]),
               ),

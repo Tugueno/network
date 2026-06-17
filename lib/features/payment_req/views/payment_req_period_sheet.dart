@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ncapp/core/widgets/app_chip.dart';
 import 'package:ncapp/core/widgets/bottom_sheet_container.dart';
-import 'package:ncapp/features/payment_req/payment_req_controller.dart';
+import 'package:ncapp/features/payment_req/controllers/payment_req_controller.dart';
 import 'package:ncapp/theme/app_theme.dart';
 
 class PaymentReqPeriodSheet extends StatefulWidget {

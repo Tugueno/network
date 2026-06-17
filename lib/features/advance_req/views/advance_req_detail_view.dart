@@ -70,6 +70,7 @@ class _DetailBodyState extends State<_DetailBody> {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: widget.item.id,
+      onBack: () => Get.find<AdvanceReqController>().closeDetail(),
       body: Stack(
         children: [
           ListView(

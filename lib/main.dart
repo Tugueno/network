@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ncapp/app/app_shell.dart';
 import 'package:ncapp/bindings/home_binding.dart';
+import 'package:ncapp/bindings/shell_binding.dart';
 import 'package:ncapp/features/requests/requests_binding.dart';
-import 'package:ncapp/features/payment_req/payment_req_binding.dart';
-import 'package:ncapp/features/advance_req/advance_req_binding.dart';
 import 'package:ncapp/features/requests/views/requests_view.dart';
+import 'package:ncapp/features/payment_req/bindings/payment_req_binding.dart';
 import 'package:ncapp/features/payment_req/views/payment_req_view.dart';
 import 'package:ncapp/features/payment_req/views/payment_req_detail_view.dart';
+import 'package:ncapp/features/advance_req/advance_req_binding.dart';
 import 'package:ncapp/features/advance_req/views/advance_req_view.dart';
 import 'package:ncapp/features/advance_req/views/advance_req_detail_view.dart';
 import 'theme/app_theme.dart';
@@ -43,6 +45,11 @@ class MyApp extends StatelessWidget {
           name: AppRoutes.home,
           page: () => const HomeView(),
           binding: HomeBinding(),
+        ),
+        GetPage(
+          name: AppRoutes.shell,
+          page: () => const AppShell(),
+          binding: ShellBinding(),
         ),
         GetPage(
           name: AppRoutes.requests,

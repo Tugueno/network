@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ncapp/features/payment_req/payment_req_controller.dart';
-import 'package:ncapp/features/payment_req/payment_req_model.dart';
-import 'package:ncapp/features/payment_req/payment_req_status_ui.dart';
+import 'package:ncapp/features/payment_req/controllers/payment_req_controller.dart';
+import 'package:ncapp/features/payment_req/models/payment_req_model.dart';
+import 'package:ncapp/features/payment_req/widgets/payment_req_status_ui.dart';
 import 'package:ncapp/theme/app_theme.dart';
 import 'package:ncapp/widgets/app_scaffold.dart';
 import 'package:ncapp/widgets/action_buttons.dart';

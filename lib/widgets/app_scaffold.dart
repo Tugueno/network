@@ -34,6 +34,9 @@ class AppScaffold extends StatelessWidget {
   /// body-г доод панелийн доогуур үргэлжлүүлэх эсэх.
   final bool extendBody;
 
+  /// BackAppBar-ийн буцах товчны override. null бол Get.back() дуудна.
+  final VoidCallback? onBack;
+
   const AppScaffold({
     super.key,
     required this.title,
@@ -43,6 +46,7 @@ class AppScaffold extends StatelessWidget {
     this.bottomNavigationBar,
     this.bottomSheet,
     this.extendBody = false,
+    this.onBack,
   });
 
   @override
@@ -50,7 +54,7 @@ class AppScaffold extends StatelessWidget {
     return Scaffold(
       extendBody: extendBody,
       backgroundColor: backgroundColor,
-      appBar: BackAppBar(title: title, backgroundColor: appBarColor),
+      appBar: BackAppBar(title: title, backgroundColor: appBarColor, onBack: onBack),
       body: body,
       bottomNavigationBar: bottomNavigationBar,
       bottomSheet: bottomSheet,

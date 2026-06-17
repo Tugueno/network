@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ncapp/features/payment_req/payment_req_model.dart';
+import 'package:ncapp/features/payment_req/models/payment_req_model.dart';
 import 'package:ncapp/theme/app_theme.dart';
 
 /// [PaymentReqStatus] enum-д харагдах байдлын (UI) getter-үүд "наасан" extension.

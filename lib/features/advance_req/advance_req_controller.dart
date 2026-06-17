@@ -28,7 +28,11 @@ class AdvanceReqController extends GetxController {
 
   void openDetail(AdvanceReqModel item) {
     selectedItem.value = item;
-    Get.toNamed(AppRoutes.advancereqDetail);
+    if (Get.width < 720) Get.toNamed(AppRoutes.advancereqDetail);
+  }
+
+  void closeDetail() {
+    selectedItem.value = null;
   }
 }
 

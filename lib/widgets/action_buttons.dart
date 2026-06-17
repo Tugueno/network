@@ -24,7 +24,7 @@ class ActionButtons extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.fromLTRB(
               16, 12, 16, MediaQuery.of(context).padding.bottom + 24),
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withValues(alpha: 0.1),
           child: Row(
             children: [
               Expanded(

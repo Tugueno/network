@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ncapp/core/widgets/bottom_sheet_container.dart';
-import 'package:ncapp/features/payment_req/payment_req_model.dart';
+import 'package:ncapp/features/payment_req/models/payment_req_model.dart';
 import 'package:ncapp/theme/app_theme.dart';
 import 'package:ncapp/widgets/user_avatar.dart';
 
@@ -145,7 +145,7 @@ class _FileTile extends StatelessWidget {
                     file.url,
                     fit: BoxFit.cover,
                     width: double.infinity,
-                    errorBuilder: (_, __, ___) => _placeholder(),
+                    errorBuilder: (_, _, _) => _placeholder(),
                   )
                 : _placeholder(),
           ),
