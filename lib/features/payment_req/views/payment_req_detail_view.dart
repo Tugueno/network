@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../controllers/payment_req_controller.dart';
-import '../../models/payment_req_model.dart';
-import '../../theme/app_theme.dart';
-import '../../widgets/action_buttons.dart';
-import '../../widgets/department_tag.dart';
-import '../../widgets/info_row.dart';
-import '../../widgets/user_avatar.dart';
+import 'package:ncapp/features/payment_req/payment_req_controller.dart';
+import 'package:ncapp/features/payment_req/payment_req_model.dart';
+import 'package:ncapp/features/payment_req/payment_req_status_ui.dart';
+import 'package:ncapp/theme/app_theme.dart';
+import 'package:ncapp/widgets/app_scaffold.dart';
+import 'package:ncapp/widgets/action_buttons.dart';
+import 'package:ncapp/widgets/department_tag.dart';
+import 'package:ncapp/widgets/info_row.dart';
+import 'package:ncapp/widgets/user_avatar.dart';
 import 'payment_req_full_detail_sheet.dart';
 import 'payment_req_approval_history_sheet.dart';
+import 'payment_req_attachment_sheet.dart';
+import 'payment_req_confirm_sheet.dart';
+import 'package:ncapp/core/widgets/app_card.dart';
 
 void _showFullDetailSheet(BuildContext context, PaymentReqModel item) {
   showModalBottomSheet(
@@ -29,6 +34,16 @@ void _showApprovalHistorySheet(
   );
 }
 
+void _showConfirmSheet(BuildContext context, PaymentReqModel item,
+    {required bool isApprove}) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (_) => PaymentReqConfirmSheet(item: item, isApprove: isApprove),
+  );
+}
+
 class PaymentReqDetailView extends GetView<PaymentReqController> {
   const PaymentReqDetailView({super.key});
 
@@ -38,27 +53,10 @@ class PaymentReqDetailView extends GetView<PaymentReqController> {
       final item = controller.selectedItem.value;
       if (item == null) return const SizedBox.shrink();
 
-      return Scaffold(
+      return AppScaffold(
         extendBody: true,
-        backgroundColor: const Color(0xFFF0F0F0),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios,
-                size: 18, color: AppTheme.textDark),
-            onPressed: () => Get.back(),
-          ),
-          title: Text(
-            item.id,
-            style: const TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textDark,
-            ),
-          ),
-          centerTitle: false,
-        ),
+        title: item.id,
+        appBarColor: Colors.white,
         body: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -70,6 +68,13 @@ class PaymentReqDetailView extends GetView<PaymentReqController> {
                   _AttachmentDescriptionCard(
                     count: item.attachmentCount,
                     description: item.description,
+                    onAttachmentTap: () => showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => PaymentReqAttachmentSheet(
+                          groups: item.attachmentGroups),
+                    ),
                   ),
                   const SizedBox(height: 12),
                   _ApprovalFlow(steps: item.approvalSteps),
@@ -79,8 +84,8 @@ class PaymentReqDetailView extends GetView<PaymentReqController> {
           ],
         ),
         bottomNavigationBar: ActionButtons(
-          onReject: () => controller.reject(item),
-          onApprove: () => controller.approve(item),
+          onReject: () => _showConfirmSheet(context, item, isApprove: false),
+          onApprove: () => _showConfirmSheet(context, item, isApprove: true),
         ),
       );
     });
@@ -92,51 +97,18 @@ class _StatusBadge extends StatelessWidget {
   final PaymentReqStatus status;
   const _StatusBadge({required this.status});
 
-  IconData get _icon {
-    switch (status) {
-      case PaymentReqStatus.pending:
-        return Icons.monetization_on;
-      case PaymentReqStatus.approved:
-        return Icons.check_circle;
-      case PaymentReqStatus.rejected:
-        return Icons.cancel;
-    }
-  }
-
-  Color get _color {
-    switch (status) {
-      case PaymentReqStatus.pending:
-        return AppTheme.textGrey;
-      case PaymentReqStatus.approved:
-        return const Color(0xFF34C759);
-      case PaymentReqStatus.rejected:
-        return AppTheme.error;
-    }
-  }
-
-  String get _text {
-    switch (status) {
-      case PaymentReqStatus.pending:
-        return 'Хүлээгдэж буй';
-      case PaymentReqStatus.approved:
-        return 'Зөвшөөрсөн';
-      case PaymentReqStatus.rejected:
-        return 'Цуцлагдсан';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(_icon, size: 16, color: _color),
+        Icon(status.icon, size: 16, color: status.color),
         const SizedBox(width: 4),
         Text(
-          _text,
+          status.label,
           style: TextStyle(
             fontSize: 14,
-            color: _color,
+            color: status.color,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -152,24 +124,12 @@ class _DetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AppCard(
       padding: const EdgeInsets.all(16),
-      color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              DepartmentTag(label: item.department),
-              Text(
-                item.date,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14, color: AppTheme.textGrey),
-              ),
-            ],
-          ),
+          DepartmentTag(label: item.department),
           const SizedBox(height: 8),
           Text(
             item.formattedAmount,
@@ -179,16 +139,18 @@ class _DetailHeader extends StatelessWidget {
               color: AppTheme.textDark,
             ),
           ),
+          const SizedBox(height: 2),
           const Text(
             'Нийт төсөвлөсөн',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight(600), color: AppTheme.textDark),
+            style: TextStyle(fontSize: 14, color: AppTheme.textGrey),
           ),
           const SizedBox(height: 8),
           _StatusBadge(status: item.status),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           const Divider(height: 1, thickness: 1, color: Color(0xFFF0F0F0)),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               UserAvatar(name: item.assignee, avatarUrl: item.avatarUrl),
               const SizedBox(width: 10),
@@ -200,23 +162,37 @@ class _DetailHeader extends StatelessWidget {
                       item.assignee,
                       style: const TextStyle(
                         fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                         color: AppTheme.textDark,
                       ),
                     ),
-                    Text(
-                      item.assigneeRole,
-                      style: const TextStyle(
-                          fontSize: 14, color: AppTheme.textGrey),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    if (item.assigneeLore.isNotEmpty) ...[
+                      const SizedBox(height: 1),
+                      Text(
+                        item.assigneeLore,
+                        style: const TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w500, color: AppTheme.textDark),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                    if (item.assigneeRole.isNotEmpty) ...[
+                      const SizedBox(height: 1),
+                      Text(
+                        item.assigneeRole,
+                        style: const TextStyle(
+                            fontSize: 13, color: AppTheme.textGrey),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ],
                 ),
               ),
             ],
           ),
           const SizedBox(height: 8),
+          InfoRow(label: 'Үүсгэсэн огноо:', value: item.date, showDivider: false, valueWeight: FontWeight.w600),
           InfoRow(label: 'Төлбөр хийгдэх огноо:', value: item.paymentDate, showDivider: false, valueWeight: FontWeight.w600),
           InfoRow(label: 'Компани:', value: item.company, showDivider: false, valueWeight: FontWeight.w600),
           const SizedBox(height: 8),
@@ -245,22 +221,23 @@ class _DetailHeader extends StatelessWidget {
 class _AttachmentDescriptionCard extends StatelessWidget {
   final int count;
   final String description;
+  final VoidCallback? onAttachmentTap;
   const _AttachmentDescriptionCard(
-      {required this.count, required this.description});
+      {required this.count, required this.description, this.onAttachmentTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AppCard(
       width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
+      radius: 12,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Attachment row
-          SizedBox(
+          GestureDetector(
+            onTap: onAttachmentTap,
+            behavior: HitTestBehavior.opaque,
+            child: SizedBox(
             height: 52,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -297,6 +274,7 @@ class _AttachmentDescriptionCard extends StatelessWidget {
                       size: 18, color: AppTheme.textGrey),
                 ],
               ),
+            ),
             ),
           ),
           const Divider(height: 4, thickness: 4, color: Color(0xFFF5F6FC),endIndent: 0,indent: 0,),
@@ -356,12 +334,9 @@ class _ApprovalFlow extends StatelessWidget {
   Widget build(BuildContext context) {
     if (steps.isEmpty) return const SizedBox.shrink();
 
-    return Container(
+    return AppCard(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
+      radius: 12,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -522,7 +497,7 @@ class _StepRow extends StatelessWidget {
                       child: Text(
                         '"${step.comment}"',
                         style: const TextStyle(
-                            fontSize: 14, color: AppTheme.textDark),
+                            fontSize: 12, color: Color(0xFF555555)),
                       ),
                     ),
                   ],

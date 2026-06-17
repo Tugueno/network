@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ncapp/bindings/home_binding.dart';
-import 'package:ncapp/bindings/requests_binding.dart';
-import 'package:ncapp/bindings/payment_req_binding.dart';
-import 'package:ncapp/views/requests/requests_view.dart';
-import 'package:ncapp/views/payment_req/payment_req_view.dart';
-import 'package:ncapp/views/payment_req/payment_req_detail_view.dart';
+import 'package:ncapp/features/requests/requests_binding.dart';
+import 'package:ncapp/features/payment_req/payment_req_binding.dart';
+import 'package:ncapp/features/advance_req/advance_req_binding.dart';
+import 'package:ncapp/features/requests/views/requests_view.dart';
+import 'package:ncapp/features/payment_req/views/payment_req_view.dart';
+import 'package:ncapp/features/payment_req/views/payment_req_detail_view.dart';
+import 'package:ncapp/features/advance_req/views/advance_req_view.dart';
+import 'package:ncapp/features/advance_req/views/advance_req_detail_view.dart';
 import 'theme/app_theme.dart';
 import 'app/app_routes.dart';
 import 'bindings/auth_binding.dart';
@@ -55,6 +58,16 @@ class MyApp extends StatelessWidget {
           name: AppRoutes.paymentreqDetail,
           page: () => const PaymentReqDetailView(),
           binding: PaymentReqBinding(),
+        ),
+        GetPage(
+          name: AppRoutes.advancereq,
+          page: () => const AdvanceReqView(),
+          binding: AdvanceReqBinding(),
+        ),
+        GetPage(
+          name: AppRoutes.advancereqDetail,
+          page: () => const AdvanceReqDetailView(),
+          binding: AdvanceReqBinding(),
         ),
       ],
     );

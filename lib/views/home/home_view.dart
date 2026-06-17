@@ -37,6 +37,22 @@ class HomeView extends GetView<HomeController> {
               const Spacer(),
 
               ElevatedButton(
+                onPressed: () => Get.toNamed(AppRoutes.advancereq),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primary,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text('Урдчилгаа хаах'),
+              ),
+              const SizedBox(height: 32,),
+
+              ElevatedButton(
                 onPressed: () => Get.toNamed(AppRoutes.requests),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primary,

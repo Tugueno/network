@@ -9,4 +9,6 @@ abstract class AppRoutes {
   static const requests = '/requests';
   static const paymentreq = '/paymentreq';
   static const paymentreqDetail = '/paymentreq/detail';
+  static const advancereq = '/advancereq';
+  static const advancereqDetail = '/advancereq/detail';
 }

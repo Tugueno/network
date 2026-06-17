@@ -9,7 +9,7 @@ class AppTheme {
   static const Color textDark = Color(0xFF000000); // Figma title
   static const Color textGrey = Color(0xFF596981);
   static const Color borderColor = Color(0xFFE5E5EA); // Figma border
-  static const Color bgColor = Color(0xFFF2F2F7); // Figma card bg
+  static const Color bgColor = Color(0xFFF6F6F6); // Figma card bg
   static const Color outlineBtn = Color(0xFFE5E5EA); // Алгасах border
 
   static ThemeData get theme => ThemeData(

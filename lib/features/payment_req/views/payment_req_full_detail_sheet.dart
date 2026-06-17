@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../models/payment_req_model.dart';
-import '../../theme/app_theme.dart';
+import 'package:ncapp/core/widgets/bottom_sheet_container.dart';
+import 'package:ncapp/features/payment_req/payment_req_model.dart';
+import 'package:ncapp/theme/app_theme.dart';
 
 class PaymentReqFullDetailSheet extends StatelessWidget {
   final PaymentReqModel item;
@@ -8,28 +9,9 @@ class PaymentReqFullDetailSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.85,
-      ),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 12),
-          Center(
-            child: Container(
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(
-                color: const Color(0xFFE5E5EA),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
+    return BottomSheetContainer(
+      maxHeightFactor: 0.85,
+      children: [
           const SizedBox(height: 16),
           const Text(
             'Дэлгэрэнгүй мэдээлэл',
@@ -39,10 +21,9 @@ class PaymentReqFullDetailSheet extends StatelessWidget {
               color: AppTheme.textDark,
             ),
           ),
-          const Divider(height: 20),
           Flexible(
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
+              padding: const EdgeInsets.fromLTRB(16, 32, 16, 32),
               shrinkWrap: true,
               children: [
                 if (item.requestDetails.isNotEmpty) ...[
@@ -57,7 +38,7 @@ class PaymentReqFullDetailSheet extends StatelessWidget {
                   const SizedBox(height: 12),
                   ...item.requestDetails.map((d) => _DetailRow(item: d)),
                   const SizedBox(height: 16),
-                  const Divider(height: 1, thickness: 1, color: Color(0xFFF0F0F0)),
+                  const Divider(height: 1, thickness: 1, color: Color(0xFFDADADA)),
                   const SizedBox(height: 16),
                 ],
                 if (item.budgetDetails.isNotEmpty) ...[
@@ -76,7 +57,6 @@ class PaymentReqFullDetailSheet extends StatelessWidget {
             ),
           ),
         ],
-      ),
     );
   }
 }

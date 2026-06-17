@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../controllers/requests_controller.dart';
-import '../../models/request_model.dart';
-import '../../theme/app_theme.dart';
+import 'package:ncapp/core/widgets/empty_state.dart';
+import 'package:ncapp/features/requests/requests_controller.dart';
+import 'package:ncapp/features/requests/request_model.dart';
+import 'package:ncapp/theme/app_theme.dart';
+import 'package:ncapp/widgets/app_scaffold.dart';
 import 'filter_overlay_view.dart';
 
 class RequestsView extends GetView<RequestsController> {
@@ -10,64 +12,63 @@ class RequestsView extends GetView<RequestsController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
+      title: 'Ирцийн хүсэлтүүд',
       backgroundColor: const Color(0xFFF5F5F5),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, size: 18, color: AppTheme.textDark),
-          onPressed: () => Get.back(),
-        ),
-        title: const Text(
-          'Ирцийн хүсэлтүүд',
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w600,
-            color: AppTheme.textDark,
-          ),
-        ),
-        centerTitle: false,
-      ),
+      appBarColor: Colors.white,
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Column(
-            children: [
-              // ── Tab bar ──────────────────────────────
-              _TabBar(controller: controller),
+          Obx(() {
+            // Дата огт байхгүй бол — шүүх хэсгийг нууж, зөвхөн empty state
+            if (controller.allRequests.isEmpty) {
+              return const EmptyState(
+                icon: Icons.send_outlined,
+                title: 'Одоогоор ирцийн хүсэлт\nирээгүй байна...',
+              );
+            }
+            return Column(
+              children: [
+                // ── Tab bar ──────────────────────────────
+                _TabBar(controller: controller),
 
-              // ── Applied employee filter chips ─────────
-              Obx(() {
-                final applied = controller.appliedEmployees;
-                if (applied.isEmpty) return const SizedBox.shrink();
-                return _EmployeeFilterChips(
-                  employees: applied,
-                  onRemove: controller.removeAppliedEmployee,
-                );
-              }),
-
-              // ── Date + filter icon ────────────────────
-              _DateHeader(controller: controller),
-
-              // ── List ──────────────────────────────────
-              Expanded(
-                child: Obx(() {
-                  final list = controller.filtered;
-                  if (list.isEmpty) return const _EmptyState();
-                  return ListView.separated(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-                    itemCount: list.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 10),
-                    itemBuilder: (_, i) => _RequestCard(
-                      item: list[i],
-                      onTap: () => controller.toggleSelect(list[i].id),
-                    ),
+                // ── Applied employee filter chips ─────────
+                Obx(() {
+                  final applied = controller.appliedEmployees;
+                  if (applied.isEmpty) return const SizedBox.shrink();
+                  return _EmployeeFilterChips(
+                    employees: applied,
+                    onRemove: controller.removeAppliedEmployee,
                   );
                 }),
-              ),
-            ],
-          ),
+
+                // ── Date + filter icon ────────────────────
+                _DateHeader(controller: controller),
+
+                // ── List ──────────────────────────────────
+                Expanded(
+                  child: Obx(() {
+                    final list = controller.filtered;
+                    if (list.isEmpty) {
+                      return const EmptyState(
+                        icon: Icons.send_outlined,
+                        title: 'Одоогоор ирцийн хүсэлт\nирээгүй байна...',
+                      );
+                    }
+                    return ListView.separated(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+                      itemCount: list.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 10),
+                      itemBuilder: (_, i) => _RequestCard(
+                        item: list[i],
+                        onTap: () => controller.toggleSelect(list[i].id),
+                      ),
+                    );
+                  }),
+                ),
+              ],
+            );
+          }),
 
           // ── Toast overlay ──────────────────────────────
           Obx(() {
@@ -173,10 +174,7 @@ class _TabChip extends StatelessWidget {
 class _EmployeeFilterChips extends StatelessWidget {
   final List<EmployeeModel> employees;
   final void Function(String id) onRemove;
-  const _EmployeeFilterChips({
-    required this.employees,
-    required this.onRemove,
-  });
+  const _EmployeeFilterChips({required this.employees, required this.onRemove});
 
   @override
   Widget build(BuildContext context) {
@@ -187,37 +185,44 @@ class _EmployeeFilterChips extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: employees
-              .map((e) => Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: AppTheme.borderColor),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            e.name,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color: AppTheme.textDark,
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          GestureDetector(
-                            onTap: () => onRemove(e.id),
-                            child: const Icon(Icons.close,
-                                size: 14, color: AppTheme.textGrey),
-                          ),
-                        ],
-                      ),
+              .map(
+                (e) => Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
                     ),
-                  ))
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppTheme.borderColor),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          e.name,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: AppTheme.textDark,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        GestureDetector(
+                          onTap: () => onRemove(e.id),
+                          child: const Icon(
+                            Icons.close,
+                            size: 14,
+                            color: AppTheme.textGrey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
               .toList(),
         ),
       ),
@@ -238,14 +243,16 @@ class _DateHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Obx(() => Text(
-                controller.months[controller.appliedMonthIndex.value],
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textDark,
-                ),
-              )),
+          Obx(
+            () => Text(
+              controller.months[controller.appliedMonthIndex.value],
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.textDark,
+              ),
+            ),
+          ),
           GestureDetector(
             onTap: () {
               controller.initFilterFromApplied();
@@ -254,8 +261,7 @@ class _DateHeader extends StatelessWidget {
                 isScrollControlled: true,
                 backgroundColor: Colors.white,
                 shape: const RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(20)),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 ),
               );
             },
@@ -333,7 +339,10 @@ class _RequestCard extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 28),
                 child: Text(
                   item.timeRange,
-                  style: const TextStyle(fontSize: 13, color: AppTheme.textGrey),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppTheme.textGrey,
+                  ),
                 ),
               ),
               const SizedBox(height: 2),
@@ -343,7 +352,10 @@ class _RequestCard extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 28),
                 child: Text(
                   item.dateRange,
-                  style: const TextStyle(fontSize: 12, color: AppTheme.textGrey),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppTheme.textGrey,
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
@@ -351,15 +363,20 @@ class _RequestCard extends StatelessWidget {
               // ── Reason ───────────────────────────────
               Container(
                 width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.bgColor,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   '"${item.reason}"',
-                  style: const TextStyle(fontSize: 13, color: AppTheme.textDark),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppTheme.textDark,
+                  ),
                 ),
               ),
 
@@ -368,8 +385,7 @@ class _RequestCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: const [
-                    Icon(Icons.attach_file,
-                        size: 16, color: AppTheme.primary),
+                    Icon(Icons.attach_file, size: 16, color: AppTheme.primary),
                     SizedBox(width: 4),
                     Text(
                       'Файл татах',
@@ -392,7 +408,9 @@ class _RequestCard extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 12,
-                    backgroundColor: AppTheme.primaryLight.withValues(alpha: 0.2),
+                    backgroundColor: AppTheme.primaryLight.withValues(
+                      alpha: 0.2,
+                    ),
                     backgroundImage: item.senderAvatar.isNotEmpty
                         ? NetworkImage(item.senderAvatar)
                         : null,
@@ -424,36 +442,15 @@ class _RequestCard extends StatelessWidget {
                     '${item.sentAt.hour.toString().padLeft(2, '0')}:'
                     '${item.sentAt.minute.toString().padLeft(2, '0')}мин',
                     style: const TextStyle(
-                        fontSize: 11, color: AppTheme.textGrey),
+                      fontSize: 11,
+                      color: AppTheme.textGrey,
+                    ),
                   ),
                 ],
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-// ── Empty state ────────────────────────────────────────────
-class _EmptyState extends StatelessWidget {
-  const _EmptyState();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.send_outlined, size: 80, color: Colors.grey.shade300),
-          const SizedBox(height: 16),
-          const Text(
-            'Одоогоор ирцийн хүсэлт\nирээгүй байна...',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 15, color: AppTheme.textGrey),
-          ),
-        ],
       ),
     );
   }
@@ -501,18 +498,20 @@ class _BottomActions extends StatelessWidget {
                 child: SizedBox(
                   height: 50,
                   child: OutlinedButton(
-                    onPressed: () =>
-                        _showConfirm(context, isApprove: false),
+                    onPressed: () => _showConfirm(context, isApprove: false),
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: AppTheme.error),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28)),
+                        borderRadius: BorderRadius.circular(28),
+                      ),
                       foregroundColor: AppTheme.error,
                     ),
                     child: const Text(
                       'Цуцлах',
                       style: TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.w600),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -523,18 +522,21 @@ class _BottomActions extends StatelessWidget {
                 child: SizedBox(
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () =>
-                        _showConfirm(context, isApprove: true),
+                    onPressed: () => _showConfirm(context, isApprove: true),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primary,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28)),
+                        borderRadius: BorderRadius.circular(28),
+                      ),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.check_circle_outline,
-                            size: 18, color: Colors.white),
+                        const Icon(
+                          Icons.check_circle_outline,
+                          size: 18,
+                          color: Colors.white,
+                        ),
                         const SizedBox(width: 6),
                         Text(
                           'Батлах ($count)',
@@ -562,13 +564,13 @@ class _BottomActions extends StatelessWidget {
             style: OutlinedButton.styleFrom(
               side: const BorderSide(color: AppTheme.error),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(28)),
+                borderRadius: BorderRadius.circular(28),
+              ),
               foregroundColor: AppTheme.error,
             ),
             child: const Text(
               'Цуцлах',
-              style:
-                  TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             ),
           ),
         );
@@ -581,8 +583,7 @@ class _BottomActions extends StatelessWidget {
 class _ConfirmSheet extends StatelessWidget {
   final RequestsController controller;
   final bool isApprove;
-  const _ConfirmSheet(
-      {required this.controller, required this.isApprove});
+  const _ConfirmSheet({required this.controller, required this.isApprove});
 
   @override
   Widget build(BuildContext context) {
@@ -593,8 +594,8 @@ class _ConfirmSheet extends StatelessWidget {
     final title = isApprove
         ? '$count ирцийн хүсэлт батлах'
         : isApproved
-            ? '$count зөвшөөрсөн ирцийн хүсэлт цуцлах'
-            : '$count ирцийн хүсэлт цуцлах';
+        ? '$count зөвшөөрсөн ирцийн хүсэлт цуцлах'
+        : '$count ирцийн хүсэлт цуцлах';
 
     return SafeArea(
       child: Padding(
@@ -654,13 +655,17 @@ class _ConfirmSheet extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primary,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(28)),
+                          borderRadius: BorderRadius.circular(28),
+                        ),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Icon(Icons.check_circle_outline,
-                              size: 18, color: Colors.white),
+                          Icon(
+                            Icons.check_circle_outline,
+                            size: 18,
+                            color: Colors.white,
+                          ),
                           SizedBox(width: 6),
                           Text(
                             'Батлах',
@@ -681,13 +686,16 @@ class _ConfirmSheet extends StatelessWidget {
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(color: AppTheme.error),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(28)),
+                          borderRadius: BorderRadius.circular(28),
+                        ),
                         foregroundColor: AppTheme.error,
                       ),
                       child: const Text(
                         'Цуцлах',
                         style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w600),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
             ),
@@ -725,9 +733,13 @@ class _ConfirmItem extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 2),
-                    Text(item.timeRange,
-                        style: const TextStyle(
-                            fontSize: 13, color: AppTheme.textGrey)),
+                    Text(
+                      item.timeRange,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: AppTheme.textGrey,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -742,22 +754,21 @@ class _ConfirmItem extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 4),
-          Text(item.dateRange,
-              style:
-                  const TextStyle(fontSize: 12, color: AppTheme.textGrey)),
+          Text(
+            item.dateRange,
+            style: const TextStyle(fontSize: 12, color: AppTheme.textGrey),
+          ),
           const SizedBox(height: 6),
           Container(
             width: double.infinity,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
               color: AppTheme.bgColor,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
               '"${item.reason}"',
-              style:
-                  const TextStyle(fontSize: 12, color: AppTheme.textDark),
+              style: const TextStyle(fontSize: 12, color: AppTheme.textDark),
             ),
           ),
           const SizedBox(height: 6),
@@ -769,18 +780,20 @@ class _ConfirmItem extends StatelessWidget {
                 child: Text(
                   item.senderName[0],
                   style: const TextStyle(
-                      fontSize: 9,
-                      color: AppTheme.primary,
-                      fontWeight: FontWeight.w600),
+                    fontSize: 9,
+                    color: AppTheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               const SizedBox(width: 6),
               Text(
                 item.senderName,
                 style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: AppTheme.textDark),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: AppTheme.textDark,
+                ),
               ),
               const Spacer(),
               Text(
@@ -788,8 +801,7 @@ class _ConfirmItem extends StatelessWidget {
                 '${item.sentAt.day.toString().padLeft(2, '0')} '
                 '${item.sentAt.hour.toString().padLeft(2, '0')}:'
                 '${item.sentAt.minute.toString().padLeft(2, '0')}мин',
-                style:
-                    const TextStyle(fontSize: 11, color: AppTheme.textGrey),
+                style: const TextStyle(fontSize: 11, color: AppTheme.textGrey),
               ),
             ],
           ),

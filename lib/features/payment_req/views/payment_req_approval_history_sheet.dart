@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../models/payment_req_model.dart';
-import '../../theme/app_theme.dart';
+import 'package:ncapp/core/widgets/bottom_sheet_container.dart';
+import 'package:ncapp/features/payment_req/payment_req_model.dart';
+import 'package:ncapp/theme/app_theme.dart';
 
 class PaymentReqApprovalHistorySheet extends StatelessWidget {
   final List<ApprovalStepModel> steps;
@@ -24,28 +25,9 @@ class PaymentReqApprovalHistorySheet extends StatelessWidget {
         .where((e) => e.value.status != ApprovalStepStatus.pending)
         .toList();
 
-    return Container(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.85,
-      ),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 12),
-          Center(
-            child: Container(
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(
-                color: const Color(0xFFE5E5EA),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
+    return BottomSheetContainer(
+      maxHeightFactor: 0.85,
+      children: [
           const SizedBox(height: 16),
           const Text(
             'Дэлгэрэнгүй мэдээлэл',
@@ -68,7 +50,6 @@ class PaymentReqApprovalHistorySheet extends StatelessWidget {
             ),
           ),
         ],
-      ),
     );
   }
 }
@@ -118,7 +99,7 @@ class _HistoryItem extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: AppTheme.textDark,
+                          color: AppTheme.textGrey,
                         ),
                       ),
                   ],
@@ -141,7 +122,7 @@ class _HistoryItem extends StatelessWidget {
                 Text(
                   step.label,
                   style: const TextStyle(
-                    fontSize: 13,
+                    fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: AppTheme.textDark,
                   ),
@@ -151,7 +132,7 @@ class _HistoryItem extends StatelessWidget {
                   Text(
                     '"${step.comment}"',
                     style: const TextStyle(
-                        fontSize: 13, color: AppTheme.textGrey),
+                        fontSize: 12, color: Color(0xFF555555)),
                   ),
                 ],
                 if (step.message != null && step.message!.isNotEmpty) ...[
@@ -177,33 +158,12 @@ class _ArrowIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isReturned ? const Color(0xFFFF9500) : AppTheme.primary;
-    if (isReturned) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Transform.scale(scaleX: -1, child: Icon(Icons.play_arrow, size: 14, color: color)),
-          Transform.scale(scaleX: -1, child: Icon(Icons.play_arrow, size: 14, color: color)),
-          Transform.scale(scaleX: -1, child: Icon(Icons.play_arrow, size: 14, color: color)),
-          const SizedBox(width: 2),
-          Container(
-            width: 2, height: 18,
-            decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(1)),
-          ),
-        ],
-      );
-    }
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 2, height: 18,
-          decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(1)),
-        ),
-        const SizedBox(width: 2),
-        Icon(Icons.play_arrow, size: 14, color: color),
-        Icon(Icons.play_arrow, size: 14, color: color),
-      ],
+    return Icon(
+      isReturned
+          ? Icons.arrow_circle_left_rounded
+          : Icons.arrow_circle_right_rounded,
+      size: 26,
+      color: isReturned ? const Color(0xFFFF9500) : const Color(0xFF34C759),
     );
   }
 }

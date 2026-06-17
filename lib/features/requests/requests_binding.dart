@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../controllers/requests_controller.dart';
+import 'package:ncapp/features/requests/requests_controller.dart';
 
 class RequestsBinding extends Bindings {
   @override
