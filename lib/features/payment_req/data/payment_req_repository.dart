@@ -46,9 +46,18 @@ final _mockData = [
         personRole: 'Хүсэгч',
         date: '05/20/2026',
         files: [
-          AttachmentFile(name: 'Document Pay..'),
-          AttachmentFile(name: 'Document Pay..'),
-          AttachmentFile(name: 'Document Pay..'),
+          AttachmentFile(
+            name: 'sample_payment_request.pdf',
+            assetPath: 'assets/files/sample_payment_request.pdf',
+          ),
+          AttachmentFile(
+            name: 'sample_payment_request.pdf',
+            assetPath: 'assets/files/sample_payment_request.pdf',
+          ),
+          AttachmentFile(
+            name: 'sample_payment_request.pdf',
+            assetPath: 'assets/files/sample_payment_request.pdf',
+          ),
         ],
       ),
       AttachmentGroup(
@@ -56,8 +65,14 @@ final _mockData = [
         personRole: '',
         date: '05/20/2026',
         files: [
-          AttachmentFile(name: 'Document Pay..'),
-          AttachmentFile(name: 'Document Pay..'),
+          AttachmentFile(
+            name: 'sample_payment_request.pdf',
+            assetPath: 'assets/files/sample_payment_request.pdf',
+          ),
+          AttachmentFile(
+            name: 'sample_payment_request.pdf',
+            assetPath: 'assets/files/sample_payment_request.pdf',
+          ),
         ],
       ),
     ],

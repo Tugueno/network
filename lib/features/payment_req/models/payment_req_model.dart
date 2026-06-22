@@ -4,10 +4,19 @@ import 'package:ncapp/core/utils/format.dart';
 class AttachmentFile {
   final String name;
   final String url;
-  const AttachmentFile({required this.name, this.url = ''});
+  final String assetPath;
 
-  factory AttachmentFile.fromJson(Map<String, dynamic> j) =>
-      AttachmentFile(name: j['name'] ?? '', url: j['url'] ?? '');
+  const AttachmentFile({
+    required this.name,
+    this.url = '',
+    this.assetPath = '',
+  });
+
+  factory AttachmentFile.fromJson(Map<String, dynamic> j) => AttachmentFile(
+    name: j['name'] ?? '',
+    url: j['url'] ?? '',
+    assetPath: j['assetPath'] ?? '',
+  );
 }
 
 class AttachmentGroup {
@@ -26,14 +35,14 @@ class AttachmentGroup {
   });
 
   factory AttachmentGroup.fromJson(Map<String, dynamic> j) => AttachmentGroup(
-        personName: j['personName'] ?? '',
-        personRole: j['personRole'] ?? '',
-        avatarUrl: j['avatarUrl'] ?? '',
-        date: j['date'] ?? '',
-        files: (j['files'] as List? ?? [])
-            .map((f) => AttachmentFile.fromJson(f))
-            .toList(),
-      );
+    personName: j['personName'] ?? '',
+    personRole: j['personRole'] ?? '',
+    avatarUrl: j['avatarUrl'] ?? '',
+    date: j['date'] ?? '',
+    files: (j['files'] as List? ?? [])
+        .map((f) => AttachmentFile.fromJson(f))
+        .toList(),
+  );
 }
 
 // ── Detail item ────────────────────────────────────────────
@@ -125,36 +134,42 @@ class PaymentReqModel {
   });
 
   factory PaymentReqModel.fromJson(Map<String, dynamic> j) => PaymentReqModel(
-        id: j['id'] ?? '',
-        department: j['department'] ?? '',
-        date: j['date'] ?? '',
-        amount: j['amount'] ?? 0,
-        assignee: j['assignee'] ?? '',
-        assigneeRole: j['assigneeRole'] ?? '',
-        assigneeLore: j['assigneeLore'] ?? '',
-        avatarUrl: j['avatarUrl'] ?? '',
-        paymentDate: j['paymentDate'] ?? '',
-        company: j['company'] ?? '',
-        description: j['description'] ?? '',
-        attachmentCount: j['attachmentCount'] ?? 0,
-        attachmentGroups: (j['attachmentGroups'] as List? ?? [])
-            .map((g) => AttachmentGroup.fromJson(g))
-            .toList(),
-        approvalSteps: (j['approvalSteps'] as List? ?? [])
-            .map((s) => ApprovalStepModel.fromJson(s))
-            .toList(),
-        status: PaymentReqStatus.values.firstWhere(
-          (s) => s.name == j['status'],
-          orElse: () => PaymentReqStatus.pending,
-        ),
-        decisionDate: j['decisionDate'] ?? '',
-        requestDetails: (j['requestDetails'] as List? ?? [])
-            .map((d) => DetailItem(subtitle: d['subtitle'] ?? '', info: d['info'] ?? ''))
-            .toList(),
-        budgetDetails: (j['budgetDetails'] as List? ?? [])
-            .map((d) => DetailItem(subtitle: d['subtitle'] ?? '', info: d['info'] ?? ''))
-            .toList(),
-      );
+    id: j['id'] ?? '',
+    department: j['department'] ?? '',
+    date: j['date'] ?? '',
+    amount: j['amount'] ?? 0,
+    assignee: j['assignee'] ?? '',
+    assigneeRole: j['assigneeRole'] ?? '',
+    assigneeLore: j['assigneeLore'] ?? '',
+    avatarUrl: j['avatarUrl'] ?? '',
+    paymentDate: j['paymentDate'] ?? '',
+    company: j['company'] ?? '',
+    description: j['description'] ?? '',
+    attachmentCount: j['attachmentCount'] ?? 0,
+    attachmentGroups: (j['attachmentGroups'] as List? ?? [])
+        .map((g) => AttachmentGroup.fromJson(g))
+        .toList(),
+    approvalSteps: (j['approvalSteps'] as List? ?? [])
+        .map((s) => ApprovalStepModel.fromJson(s))
+        .toList(),
+    status: PaymentReqStatus.values.firstWhere(
+      (s) => s.name == j['status'],
+      orElse: () => PaymentReqStatus.pending,
+    ),
+    decisionDate: j['decisionDate'] ?? '',
+    requestDetails: (j['requestDetails'] as List? ?? [])
+        .map(
+          (d) =>
+              DetailItem(subtitle: d['subtitle'] ?? '', info: d['info'] ?? ''),
+        )
+        .toList(),
+    budgetDetails: (j['budgetDetails'] as List? ?? [])
+        .map(
+          (d) =>
+              DetailItem(subtitle: d['subtitle'] ?? '', info: d['info'] ?? ''),
+        )
+        .toList(),
+  );
 
   PaymentReqModel copyWith({PaymentReqStatus? status, String? decisionDate}) =>
       PaymentReqModel(

@@ -21,7 +21,9 @@ class AdvanceReqController extends GetxController {
 
   Future<void> _load() async {
     isLoading.value = true;
-    await Future.delayed(const Duration(milliseconds: 600)); // TODO: replace with API
+    await Future.delayed(
+      const Duration(milliseconds: 600),
+    ); // TODO: replace with API
     items.value = _mockData;
     isLoading.value = false;
   }
@@ -31,8 +33,11 @@ class AdvanceReqController extends GetxController {
     if (Get.width < 720) Get.toNamed(AppRoutes.advancereqDetail);
   }
 
-  void closeDetail() {
+  void closeDetail({bool popRoute = false}) {
     selectedItem.value = null;
+    if (popRoute && Get.currentRoute == AppRoutes.advancereqDetail) {
+      Get.back();
+    }
   }
 }
 

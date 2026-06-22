@@ -133,8 +133,11 @@ class PaymentReqController extends GetxController {
     if (Get.width < 720) Get.toNamed(AppRoutes.paymentreqDetail);
   }
 
-  void closeDetail() {
+  void closeDetail({bool popRoute = false}) {
     selectedItem.value = null;
+    if (popRoute && Get.currentRoute == AppRoutes.paymentreqDetail) {
+      Get.back();
+    }
   }
 
   Future<void> approve(PaymentReqModel item) async {
@@ -196,8 +199,11 @@ class PaymentReqController extends GetxController {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.check_circle,
-                  size: 20, color: Color(0xFF34C759)),
+              const Icon(
+                Icons.check_circle,
+                size: 20,
+                color: Color(0xFF34C759),
+              ),
               const SizedBox(width: 8),
               Flexible(
                 child: Text(

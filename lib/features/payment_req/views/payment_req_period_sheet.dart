@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ncapp/core/widgets/app_chip.dart';
+import 'package:ncapp/core/widgets/app_text.dart';
 import 'package:ncapp/core/widgets/bottom_sheet_container.dart';
 import 'package:ncapp/features/payment_req/controllers/payment_req_controller.dart';
 import 'package:ncapp/theme/app_theme.dart';
@@ -95,18 +96,12 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 16),
+        const SizedBox(height: 10),
+        const SizedBox(height: 12),
         Center(
           child: Column(
             children: [
-              const Text(
-                'Хугацаа сонгох',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: AppTheme.textDark,
-                ),
-              ),
+              const AppText.heading('Хугацаа сонгох'),
               const SizedBox(height: 2),
               Text(
                 '${now.year} он',
@@ -119,21 +114,18 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
         const SizedBox(height: 24),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            'Сараар шүүх',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: AppTheme.textDark,
-            ),
-          ),
+          child: AppText.heading('Сараар шүүх'),
         ),
         const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 10,
+          child: GridView.count(
+            crossAxisCount: 4,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 8,
+            childAspectRatio: 2.7,
             children: [
               for (int m = now.month; m >= 1; m--)
                 AppChip(
@@ -152,21 +144,18 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
         const SizedBox(height: 24),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            'Улирлаар шүүх',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: AppTheme.textDark,
-            ),
-          ),
+          child: AppText.heading('Улирлаар шүүх'),
         ),
         const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 10,
+          child: GridView.count(
+            crossAxisCount: 3,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 8,
+            childAspectRatio: 4,
             children: [
               for (int q = currentQuarter; q >= 1; q--)
                 AppChip(
@@ -185,14 +174,7 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
         const SizedBox(height: 24),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            'Хоногоор шүүх',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: AppTheme.textDark,
-            ),
-          ),
+          child: AppText.heading('Хоногоор шүүх')
         ),
         const SizedBox(height: 4),
         GestureDetector(
@@ -205,14 +187,7 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
                 const Icon(Icons.calendar_month,
                     size: 20, color: Color(0xFFFF3B30)),
                 const SizedBox(width: 8),
-                const Text(
-                  'Огноо',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppTheme.textDark,
-                  ),
-                ),
+                const AppText.label('Огноо'),
                 const Spacer(),
                 Text(
                   hasRange
@@ -222,7 +197,7 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: hasRange ? FontWeight.w600 : FontWeight.w400,
-                    color: hasRange ? AppTheme.textGrey : AppTheme.textGrey,
+                    color: AppTheme.textGrey,
                   ),
                 ),
                 const SizedBox(width: 4),

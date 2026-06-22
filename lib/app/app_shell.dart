@@ -16,35 +16,52 @@ class AppShell extends GetView<ShellController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            const _TopBar(),
-            const Divider(height: 1, thickness: 1, color: AppTheme.borderColor),
-            Expanded(
-              child: Obx(() => Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 380,
-                    child: _listPanel(controller.selectedTab.value),
-                  ),
-                  const VerticalDivider(
-                    width: 1,
-                    thickness: 1,
-                    color: AppTheme.borderColor,
-                  ),
-                  Expanded(
-                    child: _detailPanel(controller.selectedTab.value),
-                  ),
-                ],
-              )),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isWeb = constraints.maxWidth >= 1200;
+        return Scaffold(
+          backgroundColor: isWeb ? AppTheme.bgColor : Colors.white,
+          body: SafeArea(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1600),
+                child: Column(
+                  children: [
+                    const _TopBar(),
+                    const Divider(height: 1, thickness: 1, color: AppTheme.borderColor),
+                    Expanded(
+                      child: Obx(() => Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (isWeb)
+                            SizedBox(
+                              width: 380,
+                              child: _listPanel(controller.selectedTab.value),
+                            )
+                          else
+                            Expanded(
+                              child: _listPanel(controller.selectedTab.value),
+                            ),
+                          if (isWeb)
+                            const VerticalDivider(
+                              width: 1,
+                              thickness: 1,
+                              color: AppTheme.borderColor,
+                            ),
+                          if (isWeb)
+                            Expanded(
+                              child: _detailPanel(controller.selectedTab.value),
+                            ),
+                        ],
+                      )),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

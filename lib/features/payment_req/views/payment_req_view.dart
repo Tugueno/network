@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ncapp/core/widgets/adaptive_modal.dart';
 import 'package:ncapp/core/widgets/app_text.dart';
 import 'package:ncapp/core/widgets/empty_state.dart';
 import 'package:ncapp/features/payment_req/controllers/payment_req_controller.dart';
@@ -12,6 +13,8 @@ import 'package:ncapp/widgets/department_tag.dart';
 import 'payment_req_period_sheet.dart';
 import 'payment_req_detail_view.dart';
 import 'package:ncapp/core/widgets/app_card.dart';
+
+const double _webPaymentReqListWidth = 455;
 
 class PaymentReqView extends GetView<PaymentReqController> {
   const PaymentReqView({super.key});
@@ -69,17 +72,11 @@ class PaymentReqView extends GetView<PaymentReqController> {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(width: 380, child: listCol),
-                const VerticalDivider(
-                    width: 1, thickness: 1, color: AppTheme.borderColor),
+                SizedBox(width: _webPaymentReqListWidth, child: listCol),
                 Expanded(
                   child: controller.selectedItem.value == null
                       ? const Center(
-                          child: Text(
-                            'Нэг хүсэлт сонгоно уу!',
-                            style: TextStyle(
-                                fontSize: 14, color: AppTheme.textGrey),
-                          ),
+                          child: AppText.bodyGrey('Нэг хүсэлт сонгоно уу!'),
                         )
                       : const PaymentReqDetailView(),
                 ),
@@ -93,10 +90,9 @@ class PaymentReqView extends GetView<PaymentReqController> {
 
   Future<void> _showPeriodSheet(BuildContext context) async {
     controller.periodSheetOpen.value = true;
-    await showModalBottomSheet(
+    await showAdaptiveModal(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      maxWidth: 560,
       builder: (_) => const PaymentReqPeriodSheet(),
     );
     controller.periodSheetOpen.value = false;
@@ -148,15 +144,18 @@ class _FilterHeader extends GetView<PaymentReqController> {
                 AppChip(
                   label: 'Хүлээгдэж буй',
                   count: controller.countFor(PaymentReqStatus.pending),
-                  selected: controller.selectedFilter.value ==
+                  selected:
+                      controller.selectedFilter.value ==
                       PaymentReqStatus.pending,
-                  onTap: () => controller.selectFilter(PaymentReqStatus.pending),
+                  onTap: () =>
+                      controller.selectFilter(PaymentReqStatus.pending),
                 ),
                 const SizedBox(width: 8),
                 AppChip(
                   label: 'Зөвшөөрсөн',
                   count: controller.countFor(PaymentReqStatus.approved),
-                  selected: controller.selectedFilter.value ==
+                  selected:
+                      controller.selectedFilter.value ==
                       PaymentReqStatus.approved,
                   onTap: () =>
                       controller.selectFilter(PaymentReqStatus.approved),
@@ -165,7 +164,8 @@ class _FilterHeader extends GetView<PaymentReqController> {
                 AppChip(
                   label: 'Буцаасан',
                   count: controller.countFor(PaymentReqStatus.rejected),
-                  selected: controller.selectedFilter.value ==
+                  selected:
+                      controller.selectedFilter.value ==
                       PaymentReqStatus.rejected,
                   onTap: () =>
                       controller.selectFilter(PaymentReqStatus.rejected),
@@ -212,9 +212,7 @@ class _TotalCard extends StatelessWidget {
         children: [
           Icon(status.icon, size: 20, color: _iconColor),
           const SizedBox(width: 8),
-          Expanded(
-            child: AppText.bodyBold(label, color: AppTheme.textGrey),
-          ),
+          Expanded(child: AppText.bodyBold(label, color: AppTheme.textGrey)),
           AppText.amount(total),
         ],
       ),
@@ -261,10 +259,7 @@ class _RequestList extends StatelessWidget {
                 thickness: 2,
                 color: AppTheme.textGrey.withValues(alpha: 0.25),
               ),
-            _RequestCard(
-              item: items[i],
-              onTap: () => onTap(items[i]),
-            ),
+            _RequestCard(item: items[i], onTap: () => onTap(items[i])),
           ],
         ],
       ),
@@ -320,8 +315,11 @@ class _RequestCard extends StatelessWidget {
                     AppText.bodyBold(item.formattedAmount),
                     if (isPending) ...[
                       const SizedBox(width: 4),
-                      const Icon(Icons.chevron_right,
-                          size: 18, color: AppTheme.textGrey),
+                      const Icon(
+                        Icons.chevron_right,
+                        size: 18,
+                        color: AppTheme.textGrey,
+                      ),
                     ],
                   ],
                 ),
@@ -344,4 +342,3 @@ class _RequestCard extends StatelessWidget {
     );
   }
 }
-
