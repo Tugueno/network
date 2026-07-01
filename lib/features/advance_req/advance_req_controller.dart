@@ -5,7 +5,9 @@ import 'package:ncapp/features/advance_req/advance_req_model.dart';
 class AdvanceReqController extends GetxController {
   final items = <AdvanceReqModel>[].obs;
   final isLoading = true.obs;
+  final errorMessage = RxnString();
   final selectedItem = Rxn<AdvanceReqModel>();
+  bool _detailRouteOpen = false;
 
   List<AdvanceReqModel> get pending =>
       items.where((r) => r.status == AdvanceReqStatus.pending).toList();
@@ -21,23 +23,47 @@ class AdvanceReqController extends GetxController {
 
   Future<void> _load() async {
     isLoading.value = true;
-    await Future.delayed(
-      const Duration(milliseconds: 600),
-    ); // TODO: replace with API
-    items.value = _mockData;
-    isLoading.value = false;
+    errorMessage.value = null;
+    try {
+      await Future.delayed(
+        const Duration(milliseconds: 600),
+      ); // TODO: replace with API
+      items.value = _mockData;
+    } catch (_) {
+      errorMessage.value = 'Урьдчилгааны хүсэлт татахад алдаа гарлаа';
+    } finally {
+      isLoading.value = false;
+    }
   }
 
-  void openDetail(AdvanceReqModel item) {
+  Future<void> refresh() => _load();
+
+  Future<void> openDetail(
+    AdvanceReqModel item, {
+    required bool openInRoute,
+  }) async {
+    if (openInRoute && _detailRouteOpen) return;
     selectedItem.value = item;
-    if (Get.width < 720) Get.toNamed(AppRoutes.advancereqDetail);
+    if (!openInRoute) return;
+
+    _detailRouteOpen = true;
+    try {
+      await Get.toNamed(AppRoutes.advancereqDetail);
+    } finally {
+      _detailRouteOpen = false;
+      await Future<void>.delayed(const Duration(milliseconds: 350));
+      if (selectedItem.value == item) {
+        selectedItem.value = null;
+      }
+    }
   }
 
   void closeDetail({bool popRoute = false}) {
-    selectedItem.value = null;
     if (popRoute && Get.currentRoute == AppRoutes.advancereqDetail) {
       Get.back();
+      return;
     }
+    selectedItem.value = null;
   }
 }
 

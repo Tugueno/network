@@ -1,11 +1,22 @@
 {
-    "name": "ncapp",
-    "short_name": "ncapp",
+    "name": "NetWork",
+    "short_name": "NetWork",
+    "id": ".",
     "start_url": ".",
+    "scope": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "display_override": [
+        "standalone",
+        "minimal-ui"
+    ],
+    "background_color": "#F9FAFF",
+    "theme_color": "#F9FAFF",
+    "description": "Ирц, төлбөр болон урьдчилгааны хүсэлтүүдээ удирдах апп.",
+    "lang": "mn",
+    "categories": [
+        "business",
+        "productivity"
+    ],
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

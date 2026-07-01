@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import '../theme/app_system_ui.dart';
+import '../theme/app_theme.dart';
 import 'back_app_bar.dart';
 
 /// Дэлгэц бүрт давтагддаг `Scaffold` + [BackAppBar] хослолыг нэг widget болгосон.
@@ -24,6 +27,9 @@ class AppScaffold extends StatelessWidget {
   /// AppBar-ийн дэвсгэр өнгө (зарим дэлгэц цагаан AppBar-тай).
   final Color appBarColor;
 
+  /// Status bar / top safe area-ийн өнгө. null бол [appBarColor]-ийг ашиглана.
+  final Color? statusBarColor;
+
   /// Доод тал дахь товч/панель (жишээ нь "Шалгах" товч). Сонголтоор.
   final Widget? bottomNavigationBar;
 
@@ -41,8 +47,9 @@ class AppScaffold extends StatelessWidget {
     super.key,
     required this.title,
     required this.body,
-    this.backgroundColor = const Color(0xFFF5F6FC),
-    this.appBarColor = const Color(0xFFF5F6FC),
+    this.backgroundColor = AppTheme.screenBackground,
+    this.appBarColor = AppTheme.screenBackground,
+    this.statusBarColor,
     this.bottomNavigationBar,
     this.bottomSheet,
     this.extendBody = false,
@@ -51,13 +58,38 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: extendBody,
-      backgroundColor: backgroundColor,
-      appBar: BackAppBar(title: title, backgroundColor: appBarColor, onBack: onBack),
-      body: body,
-      bottomNavigationBar: bottomNavigationBar,
-      bottomSheet: bottomSheet,
+    final effectiveStatusBarColor = statusBarColor ?? appBarColor;
+    final overlayStyle = AppSystemUi.forScaffold(
+      statusBarColor: effectiveStatusBarColor,
+      navigationBarColor: backgroundColor,
+    );
+    AppSystemUi.apply(overlayStyle);
+    final topPadding = MediaQuery.paddingOf(context).top;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: overlayStyle,
+      child: ColoredBox(
+        color: backgroundColor,
+        child: Scaffold(
+          extendBody: extendBody,
+          backgroundColor: backgroundColor,
+          body: Column(
+            children: [
+              BackAppBar(
+                title: title,
+                backgroundColor: appBarColor,
+                statusBarColor: effectiveStatusBarColor,
+                systemOverlayStyle: overlayStyle,
+                topPadding: topPadding,
+                onBack: onBack,
+              ),
+              Expanded(child: body),
+            ],
+          ),
+          bottomNavigationBar: bottomNavigationBar,
+          bottomSheet: bottomSheet,
+        ),
+      ),
     );
   }
 }

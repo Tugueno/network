@@ -25,7 +25,11 @@ class PaymentReqConfirmSheet extends GetView<PaymentReqController> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       padding: EdgeInsets.fromLTRB(
-          16, 12, 16, MediaQuery.of(context).padding.bottom + 16),
+        16,
+        12,
+        16,
+        MediaQuery.of(context).padding.bottom + 16,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +65,9 @@ class PaymentReqConfirmSheet extends GetView<PaymentReqController> {
                         Text(
                           item.date,
                           style: const TextStyle(
-                              fontSize: 14, color: AppTheme.textGrey),
+                            fontSize: 14,
+                            color: AppTheme.textGrey,
+                          ),
                         ),
                       ],
                     ),
@@ -73,7 +79,9 @@ class PaymentReqConfirmSheet extends GetView<PaymentReqController> {
                         Text(
                           item.assignee,
                           style: const TextStyle(
-                              fontSize: 14, color: AppTheme.textGrey),
+                            fontSize: 14,
+                            color: AppTheme.textGrey,
+                          ),
                         ),
                       ],
                     ),
@@ -115,7 +123,9 @@ class PaymentReqConfirmSheet extends GetView<PaymentReqController> {
                         Text(
                           item.assigneeRole,
                           style: const TextStyle(
-                              fontSize: 13, color: AppTheme.textGrey),
+                            fontSize: 13,
+                            color: AppTheme.textGrey,
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -138,12 +148,18 @@ class PaymentReqConfirmSheet extends GetView<PaymentReqController> {
             height: 50,
             child: isApprove
                 ? ElevatedButton(
-                    onPressed: () => controller.approve(item),
+                    onPressed: () async {
+                      await controller.approve(item);
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primary,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28)),
+                        borderRadius: BorderRadius.circular(28),
+                      ),
                     ),
                     child: const Text(
                       'Батлах',
@@ -155,17 +171,25 @@ class PaymentReqConfirmSheet extends GetView<PaymentReqController> {
                     ),
                   )
                 : OutlinedButton(
-                    onPressed: () => controller.reject(item),
+                    onPressed: () async {
+                      await controller.reject(item);
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                      }
+                    },
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: AppTheme.error),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28)),
+                        borderRadius: BorderRadius.circular(28),
+                      ),
                       foregroundColor: AppTheme.error,
                     ),
                     child: const Text(
                       'Буцаах',
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
           ),

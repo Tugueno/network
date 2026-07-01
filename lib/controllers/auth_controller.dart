@@ -4,7 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../app/app_routes.dart';
 
 class AuthController extends GetxController {
-  static const _keyEmail = 'remembered_email';
+  static const rememberedEmailKey = 'remembered_email';
+  static const _keyEmail = rememberedEmailKey;
 
   // ── TextEditingController — _field + get хэлбэр ──
   // onInit/onClose-д dispose/recreate хийхгүй

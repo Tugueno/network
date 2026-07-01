@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_system_ui.dart';
 
 /// Дэлгэц бүрт давтагддаг "буцах сум + гарчиг" AppBar.
 ///
@@ -20,39 +22,68 @@ class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Дэвсгэр өнгө. Ихэнх дэлгэц цайвар саарал (`0xFFF5F6FC`), зарим нь цагаан.
   final Color backgroundColor;
 
+  final Color? statusBarColor;
+
+  final SystemUiOverlayStyle? systemOverlayStyle;
+
+  final double topPadding;
+
   final VoidCallback? onBack;
 
   const BackAppBar({
     super.key,
     required this.title,
-    this.backgroundColor = const Color(0xFFF5F6FC),
+    this.backgroundColor = AppTheme.screenBackground,
+    this.statusBarColor,
+    this.systemOverlayStyle,
+    this.topPadding = 0,
     this.onBack,
   });
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight + topPadding);
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: backgroundColor,
-      elevation: 0,
-      scrolledUnderElevation: 0,
-      surfaceTintColor: Colors.transparent,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios,
-            size: 18, color: AppTheme.textDark),
-        onPressed: onBack ?? () => Get.back(),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: systemOverlayStyle ?? AppSystemUi.forBackground(backgroundColor),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (topPadding > 0)
+            ColoredBox(
+              color: statusBarColor ?? backgroundColor,
+              child: SizedBox(height: topPadding, width: double.infinity),
+            ),
+          Material(
+            color: backgroundColor,
+            elevation: 0,
+            child: SizedBox(
+              height: kToolbarHeight,
+              child: NavigationToolbar(
+                leading: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    size: 18,
+                    color: AppTheme.textDark,
+                  ),
+                  onPressed: onBack ?? () => Get.back(),
+                ),
+                middle: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.textDark,
+                  ),
+                ),
+                centerMiddle: false,
+                middleSpacing: 16,
+              ),
+            ),
+          ),
+        ],
       ),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 17,
-          fontWeight: FontWeight.w600,
-          color: AppTheme.textDark,
-        ),
-      ),
-      centerTitle: false,
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ncapp/core/responsive/app_breakpoints.dart';
 
-const double kAdaptiveModalBreakpoint = 720;
+const double kAdaptiveModalBreakpoint = AppBreakpoints.splitPane;
 
 Future<T?> showAdaptiveModal<T>({
   required BuildContext context,

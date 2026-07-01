@@ -1,17 +1,17 @@
-# ncapp
+# NetWork
 
-A new Flutter project.
+NetWork is a Flutter application for managing attendance, payment, and advance-closing requests across mobile and web/PWA surfaces.
 
-## Getting Started
+## Quality Focus
+- Mobile-first request workflows
+- Tablet and desktop split-pane layouts
+- Add to Home Screen friendly web metadata
+- Shared responsive breakpoints
+- Clear loading, empty, error, and retry states
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Common Checks
+```bash
+flutter analyze
+flutter test
+flutter build web --release
+```

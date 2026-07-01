@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
 
 class ApiService {
-  static const _baseUrl = 'http://10.0.19.92:4000';
+  static const _baseUrl = String.fromEnvironment(
+    'API_URL',
+    defaultValue: 'http://10.0.19.92:4000/api',
+  );
 
   final Dio _dio = Dio(BaseOptions(
     baseUrl: _baseUrl,
@@ -13,7 +16,7 @@ class ApiService {
   /// Fetch leave requests filtered by state: 'confirm' | 'validate' | 'refuse'
   Future<List<Map<String, dynamic>>> fetchLeaveList(String state) async {
     final res = await _dio.post<Map<String, dynamic>>(
-      '/api/leave_approval_list',
+      '/leave_approval_list',
       data: {'state': state},
     );
     final items = res.data?['items'] as List? ?? [];
@@ -23,7 +26,7 @@ class ApiService {
   /// Employees who currently have leave requests (for the filter panel).
   Future<List<Map<String, dynamic>>> fetchEmployeeOptions() async {
     final res = await _dio.post<Map<String, dynamic>>(
-      '/api/leave_employee_filter_options',
+      '/leave_employee_filter_options',
     );
     final items = res.data?['items'] as List? ?? [];
     return items.cast<Map<String, dynamic>>();
@@ -36,7 +39,7 @@ class ApiService {
     required List<int> leaveIds,
   }) async {
     final res = await _dio.post<Map<String, dynamic>>(
-      '/api/leave_approval_action',
+      '/leave_approval_action',
       data: {'action': action, 'leaveIds': leaveIds},
     );
     return res.data?['ok'] == true;

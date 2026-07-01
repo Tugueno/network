@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ncapp/core/responsive/app_breakpoints.dart';
 import 'package:ncapp/core/widgets/adaptive_modal.dart';
 import 'package:ncapp/core/widgets/app_text.dart';
 import 'package:ncapp/core/widgets/empty_state.dart';
@@ -14,22 +15,41 @@ import 'payment_req_period_sheet.dart';
 import 'payment_req_detail_view.dart';
 import 'package:ncapp/core/widgets/app_card.dart';
 
-const double _webPaymentReqListWidth = 455;
-
 class PaymentReqView extends GetView<PaymentReqController> {
   const PaymentReqView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final openDetailInRoute = AppBreakpoints.shouldOpenDetailInRoute(
+      MediaQuery.sizeOf(context).width,
+    );
+    const pageColor = AppTheme.screenBackground;
+
     return AppScaffold(
       title: 'Төлбөрийн хүсэлт',
+      backgroundColor: pageColor,
+      appBarColor: pageColor,
+      statusBarColor: pageColor,
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final isWide = constraints.maxWidth >= 720;
+          final isWide = AppBreakpoints.supportsSplitPane(constraints.maxWidth);
           return Obx(() {
-            if (controller.isLoading.value) {
+            if (controller.isLoading.value && controller.items.isEmpty) {
               return const Center(child: CircularProgressIndicator());
             }
+
+            final error = controller.errorMessage.value;
+            if (error != null && controller.items.isEmpty) {
+              return EmptyState(
+                icon: Icons.cancel_rounded,
+                iconColor: Colors.red,
+                title: error,
+                subtitle: 'Интернэт холболтоо шалгаад дахин оролдоно уу.',
+                actionLabel: 'Дахин оролдох',
+                onAction: controller.fetchRequests,
+              );
+            }
+
             if (controller.items.isEmpty) {
               return const EmptyState(
                 icon: Icons.swap_horiz_rounded,
@@ -46,22 +66,29 @@ class PaymentReqView extends GetView<PaymentReqController> {
                   onMonthTap: () => _showPeriodSheet(context),
                 ),
                 Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-                    children: [
-                      _TotalCard(
-                        status: controller.selectedFilter.value,
-                        label: controller.totalLabel,
-                        total: controller.formattedFilteredTotal,
-                      ),
-                      const SizedBox(height: 20),
-                      _SectionTitle(controller.sectionTitle),
-                      const SizedBox(height: 12),
-                      _RequestList(
-                        items: filtered,
-                        onTap: controller.openDetail,
-                      ),
-                    ],
+                  child: RefreshIndicator(
+                    onRefresh: controller.fetchRequests,
+                    child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                      children: [
+                        _TotalCard(
+                          status: controller.selectedFilter.value,
+                          label: controller.totalLabel,
+                          total: controller.formattedFilteredTotal,
+                        ),
+                        const SizedBox(height: 20),
+                        _SectionTitle(controller.sectionTitle),
+                        const SizedBox(height: 12),
+                        _RequestList(
+                          items: filtered,
+                          onTap: (item) => controller.openDetail(
+                            item,
+                            openInRoute: openDetailInRoute,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -72,7 +99,10 @@ class PaymentReqView extends GetView<PaymentReqController> {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(width: _webPaymentReqListWidth, child: listCol),
+                SizedBox(
+                  width: AppBreakpoints.paymentListPaneWidth,
+                  child: listCol,
+                ),
                 Expanded(
                   child: controller.selectedItem.value == null
                       ? const Center(
@@ -295,7 +325,13 @@ class _RequestCard extends StatelessWidget {
                         children: [
                           AppText.bodyHeavy(item.id),
                           const SizedBox(width: 8),
-                          AppText.bodyBoldGrey(item.date),
+                          Expanded(
+                            child: AppText.bodyBoldGrey(
+                              item.date,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 5),
@@ -303,7 +339,13 @@ class _RequestCard extends StatelessWidget {
                         children: [
                           DepartmentTag(label: item.department),
                           const SizedBox(width: 8),
-                          AppText.bodyBoldGrey(item.assignee),
+                          Expanded(
+                            child: AppText.bodyBoldGrey(
+                              item.assignee,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ],
                       ),
                     ],

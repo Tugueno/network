@@ -37,24 +37,31 @@ class PaymentReqApprovalFlow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Батлах урсгал',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textDark,
+              const Expanded(
+                child: Text(
+                  'Батлах урсгал',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.textDark,
+                  ),
                 ),
               ),
-              GestureDetector(
-                onTap: () => _showApprovalHistorySheet(context, steps),
-                child: const Text(
-                  'Дэлгэрэнгүй харах',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.primary,
+              const SizedBox(width: 12),
+              Flexible(
+                child: GestureDetector(
+                  onTap: () => _showApprovalHistorySheet(context, steps),
+                  child: const Text(
+                    'Дэлгэрэнгүй харах',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.primary,
+                    ),
                   ),
                 ),
               ),

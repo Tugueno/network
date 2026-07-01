@@ -1,5 +1,7 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ncapp/app/app_routes.dart';
+import 'package:ncapp/core/widgets/empty_state.dart';
 import 'package:ncapp/features/advance_req/advance_req_controller.dart';
 import 'package:ncapp/features/advance_req/advance_req_model.dart';
 import 'package:ncapp/features/advance_req/widgets/advance_req_attachment_sheet.dart';
@@ -14,7 +16,19 @@ class AdvanceReqDetailView extends GetView<AdvanceReqController> {
   Widget build(BuildContext context) {
     return Obx(() {
       final item = controller.selectedItem.value;
-      if (item == null) return const SizedBox.shrink();
+      if (item == null) {
+        return AppScaffold(
+          title: 'Урдчилгаа хаах',
+          onBack: () => Get.offNamed(AppRoutes.advancereq),
+          body: EmptyState(
+            icon: Icons.receipt_long_outlined,
+            title: 'Хүсэлт сонгогдоогүй байна',
+            subtitle: 'Жагсаалт руу буцаад урьдчилгааны хүсэлтээ сонгоно уу.',
+            actionLabel: 'Жагсаалт руу буцах',
+            onAction: () => Get.offNamed(AppRoutes.advancereq),
+          ),
+        );
+      }
       return _DetailBody(item: item);
     });
   }

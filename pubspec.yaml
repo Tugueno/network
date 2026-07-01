@@ -42,10 +42,14 @@ dependencies:
   cupertino_icons: ^1.0.8
   font_awesome_flutter: ^11.0.0
   google_fonts: ^6.2.1
+  liquid_glass_renderer: ^0.2.0-dev.4
+  flutter_liquid_glass_plus: ^0.0.7
+  liquid_glass_bar: ^0.1.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.4
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -53,6 +57,10 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+
+dependency_overrides:
+  liquid_glass_renderer:
+    path: third_party/liquid_glass_renderer
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -66,6 +74,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/icon/app_icon.png
     - assets/files/sample_payment_request.pdf
 
   # To add assets to your application, add an assets section, like this:
@@ -96,5 +105,16 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon.png"
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "assets/icon/app_icon.png"
+    background_color: "#1E38EC"
+    theme_color: "#1E38EC"
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

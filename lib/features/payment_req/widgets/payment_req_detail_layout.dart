@@ -159,16 +159,26 @@ class PaymentReqDetailActionArea extends StatelessWidget {
   final VoidCallback onReject;
   final VoidCallback onApprove;
   final bool isLoading;
+  final bool compact;
 
   const PaymentReqDetailActionArea({
     super.key,
     required this.onReject,
     required this.onApprove,
     this.isLoading = false,
+    this.compact = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (compact) {
+      return ActionButtons(
+        onReject: onReject,
+        onApprove: onApprove,
+        isLoading: isLoading,
+      );
+    }
+
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth < kAdaptiveModalBreakpoint) {

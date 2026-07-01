@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ncapp/controllers/shell_controller.dart';
+import 'package:ncapp/core/responsive/app_breakpoints.dart';
 import 'package:ncapp/features/advance_req/advance_req_controller.dart';
 import 'package:ncapp/features/advance_req/views/advance_req_detail_view.dart';
 import 'package:ncapp/features/advance_req/views/advance_req_view.dart';
@@ -8,6 +10,7 @@ import 'package:ncapp/features/payment_req/controllers/payment_req_controller.da
 import 'package:ncapp/features/payment_req/views/payment_req_detail_view.dart';
 import 'package:ncapp/features/payment_req/views/payment_req_view.dart';
 import 'package:ncapp/features/requests/views/requests_view.dart';
+import 'package:ncapp/theme/app_system_ui.dart';
 import 'package:ncapp/theme/app_theme.dart';
 import 'package:ncapp/widgets/network_logo.dart';
 
@@ -18,44 +21,73 @@ class AppShell extends GetView<ShellController> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isWeb = constraints.maxWidth >= 1200;
-        return Scaffold(
-          backgroundColor: isWeb ? AppTheme.bgColor : Colors.white,
-          body: SafeArea(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1600),
-                child: Column(
-                  children: [
-                    const _TopBar(),
-                    const Divider(height: 1, thickness: 1, color: AppTheme.borderColor),
-                    Expanded(
-                      child: Obx(() => Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (isWeb)
-                            SizedBox(
-                              width: 380,
-                              child: _listPanel(controller.selectedTab.value),
-                            )
-                          else
-                            Expanded(
-                              child: _listPanel(controller.selectedTab.value),
-                            ),
-                          if (isWeb)
-                            const VerticalDivider(
-                              width: 1,
-                              thickness: 1,
-                              color: AppTheme.borderColor,
-                            ),
-                          if (isWeb)
-                            Expanded(
-                              child: _detailPanel(controller.selectedTab.value),
-                            ),
-                        ],
-                      )),
-                    ),
-                  ],
+        final isWeb = AppBreakpoints.isDesktop(constraints.maxWidth);
+        final safePadding = MediaQuery.paddingOf(context);
+        final backgroundColor = isWeb ? AppTheme.bgColor : Colors.white;
+        final overlayStyle = AppSystemUi.forView(
+          topColor: Colors.white,
+          bottomColor: backgroundColor,
+        );
+        AppSystemUi.apply(overlayStyle);
+
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: overlayStyle,
+          child: Scaffold(
+            backgroundColor: backgroundColor,
+            body: Padding(
+              padding: EdgeInsets.only(
+                top: safePadding.top,
+                bottom: safePadding.bottom,
+              ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: AppBreakpoints.maxShellWidth,
+                  ),
+                  child: Column(
+                    children: [
+                      const _TopBar(),
+                      const Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: AppTheme.borderColor,
+                      ),
+                      Expanded(
+                        child: Obx(
+                          () => Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (isWeb)
+                                SizedBox(
+                                  width: AppBreakpoints.shellListPaneWidth,
+                                  child: _listPanel(
+                                    controller.selectedTab.value,
+                                  ),
+                                )
+                              else
+                                Expanded(
+                                  child: _listPanel(
+                                    controller.selectedTab.value,
+                                  ),
+                                ),
+                              if (isWeb)
+                                const VerticalDivider(
+                                  width: 1,
+                                  thickness: 1,
+                                  color: AppTheme.borderColor,
+                                ),
+                              if (isWeb)
+                                Expanded(
+                                  child: _detailPanel(
+                                    controller.selectedTab.value,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -66,22 +98,26 @@ class AppShell extends GetView<ShellController> {
   }
 
   Widget _listPanel(int tab) => [
-        const RequestsView(),
-        const PaymentReqView(),
-        const AdvanceReqView(),
-      ][tab];
+    const RequestsView(),
+    const PaymentReqView(),
+    const AdvanceReqView(),
+  ][tab];
 
   Widget _detailPanel(int tab) {
     switch (tab) {
       case 1:
         return Obx(() {
           final item = Get.find<PaymentReqController>().selectedItem.value;
-          return item == null ? const _EmptyDetail() : const PaymentReqDetailView();
+          return item == null
+              ? const _EmptyDetail()
+              : const PaymentReqDetailView();
         });
       case 2:
         return Obx(() {
           final item = Get.find<AdvanceReqController>().selectedItem.value;
-          return item == null ? const _EmptyDetail() : const AdvanceReqDetailView();
+          return item == null
+              ? const _EmptyDetail()
+              : const AdvanceReqDetailView();
         });
       default:
         return const _EmptyDetail();
@@ -108,8 +144,11 @@ class _TopBar extends GetView<ShellController> {
           const Spacer(),
           TextButton.icon(
             onPressed: controller.logout,
-            icon: const Icon(Icons.logout_outlined,
-                size: 16, color: AppTheme.textGrey),
+            icon: const Icon(
+              Icons.logout_outlined,
+              size: 16,
+              color: AppTheme.textGrey,
+            ),
             label: const Text(
               'Гарах',
               style: TextStyle(color: AppTheme.textGrey, fontSize: 14),
@@ -150,8 +189,7 @@ class _TabItem extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 14,
-              fontWeight:
-                  isSelected ? FontWeight.w600 : FontWeight.w400,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
               color: isSelected ? AppTheme.primary : AppTheme.textGrey,
             ),
           ),

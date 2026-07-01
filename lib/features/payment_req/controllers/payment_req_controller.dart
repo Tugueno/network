@@ -10,10 +10,12 @@ enum PeriodFilterType { month, quarter, range }
 
 class PaymentReqController extends GetxController {
   late final PaymentReqRepository _repo;
+  bool _detailRouteOpen = false;
 
   // ── State ─────────────────────────────────────────────────
   final items = <PaymentReqModel>[].obs;
   final isLoading = true.obs;
+  final errorMessage = RxnString();
   final selectedItem = Rxn<PaymentReqModel>();
   final selectedFilter = PaymentReqStatus.pending.obs;
 
@@ -105,8 +107,11 @@ class PaymentReqController extends GetxController {
   // ── Actions ───────────────────────────────────────────────
   Future<void> fetchRequests() async {
     isLoading.value = true;
+    errorMessage.value = null;
     try {
       items.assignAll(await _repo.fetchRequests());
+    } catch (_) {
+      errorMessage.value = 'Төлбөрийн хүсэлт татахад алдаа гарлаа';
     } finally {
       isLoading.value = false;
     }
@@ -128,16 +133,32 @@ class PaymentReqController extends GetxController {
     rangeEnd.value = end;
   }
 
-  void openDetail(PaymentReqModel item) {
+  Future<void> openDetail(
+    PaymentReqModel item, {
+    required bool openInRoute,
+  }) async {
+    if (openInRoute && _detailRouteOpen) return;
     selectedItem.value = item;
-    if (Get.width < 720) Get.toNamed(AppRoutes.paymentreqDetail);
+    if (!openInRoute) return;
+
+    _detailRouteOpen = true;
+    try {
+      await Get.toNamed(AppRoutes.paymentreqDetail);
+    } finally {
+      _detailRouteOpen = false;
+      await Future<void>.delayed(const Duration(milliseconds: 350));
+      if (selectedItem.value == item) {
+        selectedItem.value = null;
+      }
+    }
   }
 
   void closeDetail({bool popRoute = false}) {
-    selectedItem.value = null;
     if (popRoute && Get.currentRoute == AppRoutes.paymentreqDetail) {
       Get.back();
+      return;
     }
+    selectedItem.value = null;
   }
 
   Future<void> approve(PaymentReqModel item) async {
@@ -170,8 +191,11 @@ class PaymentReqController extends GetxController {
   }
 
   void _closeToList() {
+    if (Get.currentRoute == AppRoutes.paymentreqDetail) {
+      Get.back();
+      return;
+    }
     selectedItem.value = null;
-    if (Get.width < 720) Get.back();
   }
 
   void _showResultToast(String message) {

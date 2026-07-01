@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'app_system_ui.dart';
 
 class AppTheme {
   // Figma-тай яг таарсан өнгүүд
@@ -10,6 +11,7 @@ class AppTheme {
   static const Color textGrey = Color(0xFF596981);
   static const Color borderColor = Color(0xFFE5E5EA); // Figma border
   static const Color bgColor = Color(0xFFF6F6F6); // Figma card bg
+  static const Color screenBackground = Color(0xFFF5F6FC);
   static const Color outlineBtn = Color(0xFFE5E5EA); // Алгасах border
 
   static ThemeData get theme => ThemeData(
@@ -20,6 +22,13 @@ class AppTheme {
       seedColor: primary,
       primary: primary,
       error: error,
+    ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      systemOverlayStyle: AppSystemUi.light,
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,

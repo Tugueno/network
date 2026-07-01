@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../controllers/auth_controller.dart';
+import '../../theme/app_system_ui.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/network_logo.dart';
 import '../../widgets/face_id_icon.dart';
@@ -10,14 +12,32 @@ class AuthView extends GetView<AuthController> {
 
   @override
   Widget build(BuildContext context) {
+    final overlayStyle = AppSystemUi.forView(topColor: Colors.white);
+    AppSystemUi.apply(overlayStyle);
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: overlayStyle,
+      child: const ColoredBox(color: Colors.white, child: _AuthScaffold()),
+    );
+  }
+}
+
+class _AuthScaffold extends GetView<AuthController> {
+  const _AuthScaffold();
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: const Padding(
-        padding: EdgeInsets.only(bottom: 20),
-        child: Text(
-          'Version 2.0.0',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: AppTheme.textGrey, fontSize: 12),
+      bottomNavigationBar: const ColoredBox(
+        color: Colors.white,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 20),
+          child: Text(
+            'Version 2.0.0',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: AppTheme.textGrey, fontSize: 12),
+          ),
         ),
       ),
       body: SafeArea(

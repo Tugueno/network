@@ -10,6 +10,7 @@ class RequestsController extends GetxController {
   final allRequests = <RequestModel>[].obs;
   final employees = <EmployeeModel>[].obs;
   final isLoading = false.obs;
+  final errorMessage = RxnString();
 
   // Filter temp state (inside filter sheet before applying)
   final filterMonthIndex = 0.obs;
@@ -44,8 +45,7 @@ class RequestsController extends GetxController {
     return list;
   }
 
-  int get selectedCount =>
-      allRequests.where((r) => r.isSelected.value).length;
+  int get selectedCount => allRequests.where((r) => r.isSelected.value).length;
 
   int countOf(RequestStatus s) =>
       allRequests.where((r) => r.status.value == s).length;
@@ -68,28 +68,32 @@ class RequestsController extends GetxController {
   Future<void> _loadEmployees() async {
     try {
       final data = await _api.fetchEmployeeOptions();
-      employees.assignAll(data.map((j) => EmployeeModel(
+      employees.assignAll(
+        data.map(
+          (j) => EmployeeModel(
             id: (j['employee_id'] ?? '').toString(),
             name: (j['employee_name'] ?? '').toString(),
             role: (j['job_title'] ?? '').toString(),
-          )));
+          ),
+        ),
+      );
     } catch (_) {}
   }
 
   /// Fetches all three states in parallel and merges into [allRequests].
   Future<void> loadRequests() async {
     isLoading.value = true;
+    errorMessage.value = null;
     try {
       final results = await Future.wait([
-        _api.fetchLeaveList('confirm'),   // → irsen (pending)
-        _api.fetchLeaveList('validate'),  // → zuvshuursun (approved)
-        _api.fetchLeaveList('refuse'),    // → tsutsalsan (cancelled)
+        _api.fetchLeaveList('confirm'), // → irsen (pending)
+        _api.fetchLeaveList('validate'), // → zuvshuursun (approved)
+        _api.fetchLeaveList('refuse'), // → tsutsalsan (cancelled)
       ]);
-      allRequests.assignAll(
-        results.expand((list) => list.map(_fromApiItem)),
-      );
+      allRequests.assignAll(results.expand((list) => list.map(_fromApiItem)));
     } catch (_) {
-      _showToast('Өгөгдөл татахад алдаа гарлаа');
+      errorMessage.value = 'Өгөгдөл татахад алдаа гарлаа';
+      _showToast(errorMessage.value!);
     } finally {
       isLoading.value = false;
     }
@@ -213,8 +217,8 @@ class RequestsController extends GetxController {
     final status = state == 'validate'
         ? RequestStatus.zuvshuursun
         : state == 'refuse'
-            ? RequestStatus.tsutsalsan
-            : RequestStatus.irsen;
+        ? RequestStatus.tsutsalsan
+        : RequestStatus.irsen;
 
     DateTime sentAt = DateTime.now();
     final rawDate = j['create_date'] as String? ?? '';
@@ -233,10 +237,14 @@ class RequestsController extends GetxController {
     final startLabel = j['start_date_label'] as String? ?? '';
     final endLabel = j['end_date_label'] as String? ?? '';
     final duration = j['duration_display'] as String? ?? '';
-    final datePart = (startLabel.isNotEmpty && endLabel.isNotEmpty && startLabel != endLabel)
+    final datePart =
+        (startLabel.isNotEmpty && endLabel.isNotEmpty && startLabel != endLabel)
         ? '$startLabel - $endLabel'
         : startLabel;
-    final dateRange = [datePart, duration].where((s) => s.isNotEmpty).join(' · ');
+    final dateRange = [
+      datePart,
+      duration,
+    ].where((s) => s.isNotEmpty).join(' · ');
 
     return RequestModel(
       id: (j['leave_id'] ?? 0).toString(),
@@ -257,13 +265,17 @@ class RequestsController extends GetxController {
   static RequestType _mapType(String name) {
     final n = name.toLowerCase();
     if (n.contains('гадуур')) return RequestType.gaduurAjillasan;
-    if (n.contains('өвчн') || n.contains('эмчилгэ')) return RequestType.uvchiniiChuluu;
+    if (n.contains('өвчн') || n.contains('эмчилгэ'))
+      return RequestType.uvchiniiChuluu;
     if (n.contains('цалингүй')) return RequestType.tsalinguiChuluu;
     if (n.contains('аав')) return RequestType.aaviin10Honog;
-    if (n.contains('ээлж') || n.contains('амралт')) return RequestType.eeljiinAmralt;
+    if (n.contains('ээлж') || n.contains('амралт'))
+      return RequestType.eeljiinAmralt;
     if (n.contains('төрсөн')) return RequestType.tursunUdriinChuluu;
-    if (n.contains('school') || n.contains('police')) return RequestType.schoolPolice;
-    if (n.contains('ар гэр') || n.contains('гачигдал')) return RequestType.arGeriin;
+    if (n.contains('school') || n.contains('police'))
+      return RequestType.schoolPolice;
+    if (n.contains('ар гэр') || n.contains('гачигдал'))
+      return RequestType.arGeriin;
     return RequestType.ajillasan;
   }
 }

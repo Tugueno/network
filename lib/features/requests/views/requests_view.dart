@@ -17,12 +17,27 @@ class RequestsView extends GetView<RequestsController> {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: 'Ирцийн хүсэлтүүд',
-      backgroundColor: const Color(0xFFF5F5F5),
-      appBarColor: Colors.white,
+      backgroundColor: const Color(0xFFF6F6F6),
+      appBarColor: const Color(0xFFF6F6F6),
       body: Stack(
         fit: StackFit.expand,
         children: [
           Obx(() {
+            if (controller.isLoading.value && controller.allRequests.isEmpty) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final error = controller.errorMessage.value;
+            if (error != null && controller.allRequests.isEmpty) {
+              return EmptyState(
+                icon: Icons.cloud_off_outlined,
+                title: error,
+                subtitle: 'Интернэт холболтоо шалгаад дахин оролдоно уу.',
+                actionLabel: 'Дахин оролдох',
+                onAction: controller.loadRequests,
+              );
+            }
+
             if (controller.allRequests.isEmpty) {
               return const EmptyState(
                 icon: Icons.send_outlined,
@@ -53,13 +68,17 @@ class RequestsView extends GetView<RequestsController> {
                       );
                     }
 
-                    return ListView.separated(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-                      itemCount: list.length,
-                      separatorBuilder: (_, _) => const SizedBox(height: 10),
-                      itemBuilder: (_, i) => RequestCard(
-                        item: list[i],
-                        onTap: () => controller.toggleSelect(list[i].id),
+                    return RefreshIndicator(
+                      onRefresh: controller.loadRequests,
+                      child: ListView.separated(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+                        itemCount: list.length,
+                        separatorBuilder: (_, _) => const SizedBox(height: 10),
+                        itemBuilder: (_, i) => RequestCard(
+                          item: list[i],
+                          onTap: () => controller.toggleSelect(list[i].id),
+                        ),
                       ),
                     );
                   }),
