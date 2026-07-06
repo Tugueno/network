@@ -11,13 +11,14 @@ class RequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Obx(
       () => GestureDetector(
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: appColors.cardBackground,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: item.isSelected.value
@@ -37,26 +38,26 @@ class RequestCard extends StatelessWidget {
                         : Icons.radio_button_off,
                     color: item.isSelected.value
                         ? AppTheme.primary
-                        : AppTheme.textGrey,
+                        : appColors.textSecondary,
                     size: 20,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       item.type.label,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppTheme.textDark,
+                        color: appColors.textPrimary,
                       ),
                     ),
                   ),
                   Text(
                     '${item.totalHours} цаг',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: AppTheme.textDark,
+                      color: appColors.textPrimary,
                     ),
                   ),
                 ],
@@ -66,9 +67,9 @@ class RequestCard extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 28),
                 child: Text(
                   item.timeRange,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
-                    color: AppTheme.textGrey,
+                    color: appColors.textSecondary,
                   ),
                 ),
               ),
@@ -77,9 +78,9 @@ class RequestCard extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 28),
                 child: Text(
                   item.dateRange,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: AppTheme.textGrey,
+                    color: appColors.textSecondary,
                   ),
                 ),
               ),
@@ -91,15 +92,12 @@ class RequestCard extends StatelessWidget {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: AppTheme.bgColor,
+                  color: appColors.subtleFill,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   '"${item.reason}"',
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: AppTheme.textDark,
-                  ),
+                  style: TextStyle(fontSize: 13, color: appColors.textPrimary),
                 ),
               ),
               if (item.fileUrl != null) ...[
@@ -120,7 +118,7 @@ class RequestCard extends StatelessWidget {
                 ),
               ],
               const SizedBox(height: 10),
-              const Divider(height: 1, color: Color(0xFFF0F0F0)),
+              Divider(height: 1, color: appColors.border),
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -146,10 +144,10 @@ class RequestCard extends StatelessWidget {
                   const SizedBox(width: 6),
                   Text(
                     item.senderName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
-                      color: AppTheme.textDark,
+                      color: appColors.textPrimary,
                     ),
                   ),
                   const Spacer(),
@@ -159,9 +157,9 @@ class RequestCard extends StatelessWidget {
                     '${item.sentAt.day.toString().padLeft(2, '0')} '
                     '${item.sentAt.hour.toString().padLeft(2, '0')}:'
                     '${item.sentAt.minute.toString().padLeft(2, '0')}мин',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 11,
-                      color: AppTheme.textGrey,
+                      color: appColors.textSecondary,
                     ),
                   ),
                 ],

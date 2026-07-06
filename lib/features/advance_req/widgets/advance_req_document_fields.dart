@@ -18,14 +18,15 @@ class AdvanceReqPartialSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            const Text(
+            Text(
               'Хэсэгчилж оруулах',
-              style: TextStyle(fontSize: 14, color: AppTheme.textDark),
+              style: TextStyle(fontSize: 14, color: appColors.textPrimary),
             ),
             const Spacer(),
             Switch(
@@ -41,7 +42,7 @@ class AdvanceReqPartialSection extends StatelessWidget {
           const SizedBox(height: 8),
           Container(
             decoration: BoxDecoration(
-              color: const Color(0xFFF5F6FC),
+              color: appColors.subtleFill,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -52,11 +53,11 @@ class AdvanceReqPartialSection extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         '₮',
                         style: TextStyle(
                           fontSize: 14,
-                          color: AppTheme.textGrey,
+                          color: appColors.textSecondary,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -64,15 +65,15 @@ class AdvanceReqPartialSection extends StatelessWidget {
                         child: TextField(
                           controller: partialCtrl,
                           keyboardType: TextInputType.number,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
-                            color: AppTheme.textDark,
+                            color: appColors.textPrimary,
                           ),
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hintText: 'Хэсэгчилсэн дүн оруулах',
                             hintStyle: TextStyle(
                               fontSize: 14,
-                              color: AppTheme.textGrey,
+                              color: appColors.textSecondary,
                             ),
                             isDense: true,
                             contentPadding: EdgeInsets.zero,
@@ -103,9 +104,9 @@ class AdvanceReqPartialSection extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 14),
                       child: Text(
                         'Шинэ хаах дүн: ${formatTugrik(newAmt)}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
-                          color: AppTheme.textGrey,
+                          color: appColors.textSecondary,
                         ),
                       ),
                     );
@@ -131,16 +132,17 @@ class AdvanceReqCommentBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return TextField(
       controller: controller,
       minLines: 3,
       maxLines: 5,
-      style: AppTextStyles.body,
+      style: AppTextStyles.body.copyWith(color: appColors.textPrimary),
       decoration: InputDecoration(
         hintText: 'Тайлбар оруулах',
-        hintStyle: AppTextStyles.hint,
+        hintStyle: AppTextStyles.hint.copyWith(color: appColors.textSecondary),
         filled: true,
-        fillColor: const Color(0xFFF5F6FC),
+        fillColor: appColors.subtleFill,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 14,
@@ -179,26 +181,27 @@ class AdvanceReqLabelField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Row(
       children: [
         Text(
           '$label:',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: AppTheme.textDark,
+            color: appColors.textPrimary,
           ),
         ),
         const SizedBox(width: 10),
         Expanded(
           child: TextField(
             controller: controller,
-            style: const TextStyle(fontSize: 14, color: AppTheme.textDark),
+            style: TextStyle(fontSize: 14, color: appColors.textPrimary),
             decoration: InputDecoration(
               hintText: placeholder,
-              hintStyle: const TextStyle(
+              hintStyle: TextStyle(
                 fontSize: 14,
-                color: AppTheme.textGrey,
+                color: appColors.textSecondary,
               ),
               isDense: true,
               contentPadding: EdgeInsets.zero,
@@ -212,4 +215,3 @@ class AdvanceReqLabelField extends StatelessWidget {
     );
   }
 }
-

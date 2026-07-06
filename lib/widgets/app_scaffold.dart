@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../theme/app_system_ui.dart';
 import '../theme/app_theme.dart';
 import 'back_app_bar.dart';
@@ -27,9 +26,6 @@ class AppScaffold extends StatelessWidget {
   /// AppBar-ийн дэвсгэр өнгө (зарим дэлгэц цагаан AppBar-тай).
   final Color appBarColor;
 
-  /// Status bar / top safe area-ийн өнгө. null бол [appBarColor]-ийг ашиглана.
-  final Color? statusBarColor;
-
   /// Доод тал дахь товч/панель (жишээ нь "Шалгах" товч). Сонголтоор.
   final Widget? bottomNavigationBar;
 
@@ -49,7 +45,6 @@ class AppScaffold extends StatelessWidget {
     required this.body,
     this.backgroundColor = AppTheme.screenBackground,
     this.appBarColor = AppTheme.screenBackground,
-    this.statusBarColor,
     this.bottomNavigationBar,
     this.bottomSheet,
     this.extendBody = false,
@@ -58,37 +53,24 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveStatusBarColor = statusBarColor ?? appBarColor;
-    final overlayStyle = AppSystemUi.forScaffold(
-      statusBarColor: effectiveStatusBarColor,
-      navigationBarColor: backgroundColor,
-    );
-    AppSystemUi.apply(overlayStyle);
-    final topPadding = MediaQuery.paddingOf(context).top;
+    final effectiveBackground = AppTheme.resolveColor(context, backgroundColor);
+    final effectiveAppBarColor = AppTheme.resolveColor(context, appBarColor);
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: overlayStyle,
-      child: ColoredBox(
-        color: backgroundColor,
-        child: Scaffold(
-          extendBody: extendBody,
-          backgroundColor: backgroundColor,
-          body: Column(
-            children: [
-              BackAppBar(
-                title: title,
-                backgroundColor: appBarColor,
-                statusBarColor: effectiveStatusBarColor,
-                systemOverlayStyle: overlayStyle,
-                topPadding: topPadding,
-                onBack: onBack,
-              ),
-              Expanded(child: body),
-            ],
+    return StatusAwarePage(
+      backgroundColor: effectiveBackground,
+      navigationBarColor: effectiveBackground,
+      extendBody: extendBody,
+      bottomNavigationBar: bottomNavigationBar,
+      bottomSheet: bottomSheet,
+      child: Column(
+        children: [
+          BackAppBar(
+            title: title,
+            backgroundColor: effectiveAppBarColor,
+            onBack: onBack,
           ),
-          bottomNavigationBar: bottomNavigationBar,
-          bottomSheet: bottomSheet,
-        ),
+          Expanded(child: body),
+        ],
       ),
     );
   }

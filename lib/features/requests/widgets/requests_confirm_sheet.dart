@@ -8,10 +8,14 @@ class RequestsConfirmSheet extends StatelessWidget {
   final RequestsController controller;
   final bool isApprove;
 
-  const RequestsConfirmSheet({required this.controller, required this.isApprove});
+  const RequestsConfirmSheet({
+    required this.controller,
+    required this.isApprove,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     final items = controller.selectedItems;
     final count = items.length;
     final isApproved = controller.selectedTab.value == 1;
@@ -35,17 +39,17 @@ class RequestsConfirmSheet extends StatelessWidget {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
-                  color: AppTheme.borderColor,
+                  color: appColors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.w600,
-                color: AppTheme.textDark,
+                color: appColors.textPrimary,
               ),
             ),
             const SizedBox(height: 16),
@@ -57,7 +61,7 @@ class RequestsConfirmSheet extends StatelessWidget {
                 shrinkWrap: true,
                 itemCount: items.length,
                 separatorBuilder: (_, _) =>
-                    const Divider(height: 1, color: Color(0xFFF0F0F0)),
+                    Divider(height: 1, color: appColors.border),
                 itemBuilder: (_, i) => _ConfirmItem(item: items[i]),
               ),
             ),
@@ -133,6 +137,7 @@ class _ConfirmItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -146,18 +151,18 @@ class _ConfirmItem extends StatelessWidget {
                   children: [
                     Text(
                       item.type.label,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppTheme.textDark,
+                        color: appColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       item.timeRange,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
-                        color: AppTheme.textGrey,
+                        color: appColors.textSecondary,
                       ),
                     ),
                   ],
@@ -165,10 +170,10 @@ class _ConfirmItem extends StatelessWidget {
               ),
               Text(
                 '${item.totalHours} цаг',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.textDark,
+                  color: appColors.textPrimary,
                 ),
               ),
             ],
@@ -176,19 +181,19 @@ class _ConfirmItem extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             item.dateRange,
-            style: const TextStyle(fontSize: 12, color: AppTheme.textGrey),
+            style: TextStyle(fontSize: 12, color: appColors.textSecondary),
           ),
           const SizedBox(height: 6),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
-              color: AppTheme.bgColor,
+              color: appColors.subtleFill,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
               '"${item.reason}"',
-              style: const TextStyle(fontSize: 12, color: AppTheme.textDark),
+              style: TextStyle(fontSize: 12, color: appColors.textPrimary),
             ),
           ),
           const SizedBox(height: 6),
@@ -209,10 +214,10 @@ class _ConfirmItem extends StatelessWidget {
               const SizedBox(width: 6),
               Text(
                 item.senderName,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: AppTheme.textDark,
+                  color: appColors.textPrimary,
                 ),
               ),
               const Spacer(),
@@ -221,7 +226,7 @@ class _ConfirmItem extends StatelessWidget {
                 '${item.sentAt.day.toString().padLeft(2, '0')} '
                 '${item.sentAt.hour.toString().padLeft(2, '0')}:'
                 '${item.sentAt.minute.toString().padLeft(2, '0')}мин',
-                style: const TextStyle(fontSize: 11, color: AppTheme.textGrey),
+                style: TextStyle(fontSize: 11, color: appColors.textSecondary),
               ),
             ],
           ),

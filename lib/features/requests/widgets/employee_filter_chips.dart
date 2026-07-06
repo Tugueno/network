@@ -14,8 +14,9 @@ class EmployeeFilterChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Container(
-      color: Colors.white,
+      color: appColors.cardBackground,
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -30,28 +31,28 @@ class EmployeeFilterChips extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: appColors.cardBackground,
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppTheme.borderColor),
+                      border: Border.all(color: appColors.border),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           e.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
-                            color: AppTheme.textDark,
+                            color: appColors.textPrimary,
                           ),
                         ),
                         const SizedBox(width: 6),
                         GestureDetector(
                           onTap: () => onRemove(e.id),
-                          child: const Icon(
+                          child: Icon(
                             Icons.close,
                             size: 14,
-                            color: AppTheme.textGrey,
+                            color: appColors.textSecondary,
                           ),
                         ),
                       ],

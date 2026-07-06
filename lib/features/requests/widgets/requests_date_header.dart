@@ -11,8 +11,9 @@ class RequestsDateHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Container(
-      color: Colors.white,
+      color: appColors.cardBackground,
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -20,10 +21,10 @@ class RequestsDateHeader extends StatelessWidget {
           Obx(
             () => Text(
               controller.months[controller.appliedMonthIndex.value],
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: AppTheme.textDark,
+                color: appColors.textPrimary,
               ),
             ),
           ),
@@ -33,13 +34,13 @@ class RequestsDateHeader extends StatelessWidget {
               Get.bottomSheet(
                 const FilterOverlayView(),
                 isScrollControlled: true,
-                backgroundColor: Colors.white,
+                backgroundColor: appColors.sheetBackground,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 ),
               );
             },
-            child: const Icon(Icons.tune, size: 20, color: AppTheme.textGrey),
+            child: Icon(Icons.tune, size: 20, color: appColors.textSecondary),
           ),
         ],
       ),

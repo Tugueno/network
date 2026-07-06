@@ -19,10 +19,11 @@ class PaymentReqConfirmSheet extends GetView<PaymentReqController> {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: appColors.sheetBackground,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       padding: EdgeInsets.fromLTRB(
         16,
@@ -38,10 +39,10 @@ class PaymentReqConfirmSheet extends GetView<PaymentReqController> {
           const SizedBox(height: 20),
           Text(
             isApprove ? 'Хүсэлт батлах' : 'Хүсэлт буцаах',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.w700,
-              color: AppTheme.textDark,
+              color: appColors.textPrimary,
             ),
           ),
           const SizedBox(height: 16),
@@ -55,18 +56,18 @@ class PaymentReqConfirmSheet extends GetView<PaymentReqController> {
                       children: [
                         Text(
                           item.id,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: AppTheme.textDark,
+                            color: appColors.textPrimary,
                           ),
                         ),
                         const SizedBox(width: 8),
                         Text(
                           item.date,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
-                            color: AppTheme.textGrey,
+                            color: appColors.textSecondary,
                           ),
                         ),
                       ],
@@ -78,9 +79,9 @@ class PaymentReqConfirmSheet extends GetView<PaymentReqController> {
                         const SizedBox(width: 8),
                         Text(
                           item.assignee,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
-                            color: AppTheme.textGrey,
+                            color: appColors.textSecondary,
                           ),
                         ),
                       ],
@@ -90,10 +91,10 @@ class PaymentReqConfirmSheet extends GetView<PaymentReqController> {
               ),
               Text(
                 item.formattedAmount,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.textDark,
+                  color: appColors.textPrimary,
                 ),
               ),
             ],
@@ -111,10 +112,10 @@ class PaymentReqConfirmSheet extends GetView<PaymentReqController> {
                       if (item.assigneeLore.isNotEmpty)
                         Text(
                           item.assigneeLore,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
-                            color: AppTheme.textDark,
+                            color: appColors.textPrimary,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -122,9 +123,9 @@ class PaymentReqConfirmSheet extends GetView<PaymentReqController> {
                       if (item.assigneeRole.isNotEmpty)
                         Text(
                           item.assigneeRole,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: AppTheme.textGrey,
+                            color: appColors.textSecondary,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

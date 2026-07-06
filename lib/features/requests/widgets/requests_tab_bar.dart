@@ -11,8 +11,9 @@ class RequestsTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Container(
-      color: Colors.white,
+      color: appColors.cardBackground,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Obx(
         () => Row(
@@ -59,6 +60,7 @@ class _TabChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -67,7 +69,7 @@ class _TabChip extends StatelessWidget {
           color: selected ? AppTheme.primary : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: selected ? AppTheme.primary : AppTheme.borderColor,
+            color: selected ? AppTheme.primary : appColors.border,
           ),
         ),
         child: Text(
@@ -75,7 +77,7 @@ class _TabChip extends StatelessWidget {
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: selected ? Colors.white : AppTheme.textGrey,
+            color: selected ? Colors.white : appColors.textSecondary,
           ),
         ),
       ),

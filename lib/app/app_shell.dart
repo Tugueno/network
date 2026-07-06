@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ncapp/controllers/shell_controller.dart';
 import 'package:ncapp/core/responsive/app_breakpoints.dart';
@@ -22,73 +21,52 @@ class AppShell extends GetView<ShellController> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isWeb = AppBreakpoints.isDesktop(constraints.maxWidth);
-        final safePadding = MediaQuery.paddingOf(context);
-        final backgroundColor = isWeb ? AppTheme.bgColor : Colors.white;
-        final overlayStyle = AppSystemUi.forView(
-          topColor: Colors.white,
-          bottomColor: backgroundColor,
-        );
-        AppSystemUi.apply(overlayStyle);
+        final appColors = AppTheme.colors(context);
+        final backgroundColor = isWeb
+            ? appColors.subtleFill
+            : appColors.cardBackground;
 
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: overlayStyle,
-          child: Scaffold(
-            backgroundColor: backgroundColor,
-            body: Padding(
-              padding: EdgeInsets.only(
-                top: safePadding.top,
-                bottom: safePadding.bottom,
+        return StatusAwarePage(
+          backgroundColor: backgroundColor,
+          safeAreaBottom: true,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: AppBreakpoints.maxShellWidth,
               ),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: AppBreakpoints.maxShellWidth,
-                  ),
-                  child: Column(
-                    children: [
-                      const _TopBar(),
-                      const Divider(
-                        height: 1,
-                        thickness: 1,
-                        color: AppTheme.borderColor,
+              child: Column(
+                children: [
+                  const _TopBar(),
+                  Divider(height: 1, thickness: 1, color: appColors.border),
+                  Expanded(
+                    child: Obx(
+                      () => Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (isWeb)
+                            SizedBox(
+                              width: AppBreakpoints.shellListPaneWidth,
+                              child: _listPanel(controller.selectedTab.value),
+                            )
+                          else
+                            Expanded(
+                              child: _listPanel(controller.selectedTab.value),
+                            ),
+                          if (isWeb)
+                            VerticalDivider(
+                              width: 1,
+                              thickness: 1,
+                              color: appColors.border,
+                            ),
+                          if (isWeb)
+                            Expanded(
+                              child: _detailPanel(controller.selectedTab.value),
+                            ),
+                        ],
                       ),
-                      Expanded(
-                        child: Obx(
-                          () => Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (isWeb)
-                                SizedBox(
-                                  width: AppBreakpoints.shellListPaneWidth,
-                                  child: _listPanel(
-                                    controller.selectedTab.value,
-                                  ),
-                                )
-                              else
-                                Expanded(
-                                  child: _listPanel(
-                                    controller.selectedTab.value,
-                                  ),
-                                ),
-                              if (isWeb)
-                                const VerticalDivider(
-                                  width: 1,
-                                  thickness: 1,
-                                  color: AppTheme.borderColor,
-                                ),
-                              if (isWeb)
-                                Expanded(
-                                  child: _detailPanel(
-                                    controller.selectedTab.value,
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ),
@@ -130,9 +108,10 @@ class _TopBar extends GetView<ShellController> {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Container(
       height: 56,
-      color: Colors.white,
+      color: appColors.cardBackground,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         children: [
@@ -144,14 +123,14 @@ class _TopBar extends GetView<ShellController> {
           const Spacer(),
           TextButton.icon(
             onPressed: controller.logout,
-            icon: const Icon(
+            icon: Icon(
               Icons.logout_outlined,
               size: 16,
-              color: AppTheme.textGrey,
+              color: appColors.textSecondary,
             ),
-            label: const Text(
+            label: Text(
               'Гарах',
-              style: TextStyle(color: AppTheme.textGrey, fontSize: 14),
+              style: TextStyle(color: appColors.textSecondary, fontSize: 14),
             ),
           ),
         ],
@@ -169,6 +148,7 @@ class _TabItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ShellController>();
+    final appColors = AppTheme.colors(context);
     return Obx(() {
       final isSelected = controller.selectedTab.value == index;
       return GestureDetector(
@@ -190,7 +170,7 @@ class _TabItem extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-              color: isSelected ? AppTheme.primary : AppTheme.textGrey,
+              color: isSelected ? AppTheme.primary : appColors.textSecondary,
             ),
           ),
         ),
@@ -204,10 +184,11 @@ class _EmptyDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final appColors = AppTheme.colors(context);
+    return Center(
       child: Text(
         'Хүсэлт сонгоно уу',
-        style: TextStyle(fontSize: 14, color: AppTheme.textGrey),
+        style: TextStyle(fontSize: 14, color: appColors.textSecondary),
       ),
     );
   }

@@ -10,6 +10,7 @@ class FilterEmployeeOverlayView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<RequestsController>();
+    final appColors = AppTheme.colors(context);
     return SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -21,7 +22,7 @@ class FilterEmployeeOverlayView extends StatelessWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppTheme.borderColor,
+                color: appColors.border,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -34,23 +35,26 @@ class FilterEmployeeOverlayView extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () => Get.back(),
-                  child: const Icon(Icons.arrow_back_ios,
-                      size: 18, color: AppTheme.textDark),
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    size: 18,
+                    color: appColors.textPrimary,
+                  ),
                 ),
                 const SizedBox(width: 8),
-                const Text(
+                Text(
                   'Ажилчнаар шүүх',
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textDark,
+                    color: appColors.textPrimary,
                   ),
                 ),
               ],
             ),
           ),
 
-          const Divider(height: 1, color: Color(0xFFF0F0F0)),
+          Divider(height: 1, color: appColors.border),
 
           // Employee list
           Flexible(
@@ -81,14 +85,16 @@ class FilterEmployeeOverlayView extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primary,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(28)),
+                    borderRadius: BorderRadius.circular(28),
+                  ),
                 ),
                 child: const Text(
                   'Шүүж харах',
                   style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),

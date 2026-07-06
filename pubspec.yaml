@@ -40,11 +40,11 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  cupertino_native: ^0.1.1
   font_awesome_flutter: ^11.0.0
   google_fonts: ^6.2.1
   liquid_glass_renderer: ^0.2.0-dev.4
   flutter_liquid_glass_plus: ^0.0.7
-  liquid_glass_bar: ^0.1.1
 
 dev_dependencies:
   flutter_test:

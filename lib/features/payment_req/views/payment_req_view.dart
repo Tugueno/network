@@ -29,7 +29,6 @@ class PaymentReqView extends GetView<PaymentReqController> {
       title: 'Төлбөрийн хүсэлт',
       backgroundColor: pageColor,
       appBarColor: pageColor,
-      statusBarColor: pageColor,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isWide = AppBreakpoints.supportsSplitPane(constraints.maxWidth);
@@ -137,6 +136,7 @@ class _FilterHeader extends GetView<PaymentReqController> {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return AppCard(
       margin: const EdgeInsets.fromLTRB(16, 4, 16, 0),
       clip: true,
@@ -158,13 +158,13 @@ class _FilterHeader extends GetView<PaymentReqController> {
                         ? Icons.keyboard_arrow_up
                         : Icons.keyboard_arrow_down,
                     size: 18,
-                    color: AppTheme.textGrey,
+                    color: appColors.textSecondary,
                   ),
                 ],
               ),
             ),
           ),
-          const Divider(height: 1, thickness: 1, color: Color(0xFFF0F0F0)),
+          Divider(height: 1, thickness: 1, color: appColors.border),
           SizedBox(
             height: 54,
             child: ListView(
@@ -267,6 +267,7 @@ class _RequestList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     if (items.isEmpty) {
       return const Padding(
         padding: EdgeInsets.only(top: 40),
@@ -284,11 +285,7 @@ class _RequestList extends StatelessWidget {
         children: [
           for (int i = 0; i < items.length; i++) ...[
             if (i > 0)
-              Divider(
-                height: 2,
-                thickness: 2,
-                color: AppTheme.textGrey.withValues(alpha: 0.25),
-              ),
+              Divider(height: 2, thickness: 2, color: appColors.border),
             _RequestCard(item: items[i], onTap: () => onTap(items[i])),
           ],
         ],
@@ -305,6 +302,7 @@ class _RequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     final isPending = item.status == PaymentReqStatus.pending;
     final showDecision = !isPending && item.decisionDate.isNotEmpty;
 
@@ -357,10 +355,10 @@ class _RequestCard extends StatelessWidget {
                     AppText.bodyBold(item.formattedAmount),
                     if (isPending) ...[
                       const SizedBox(width: 4),
-                      const Icon(
+                      Icon(
                         Icons.chevron_right,
                         size: 18,
-                        color: AppTheme.textGrey,
+                        color: appColors.textSecondary,
                       ),
                     ],
                   ],

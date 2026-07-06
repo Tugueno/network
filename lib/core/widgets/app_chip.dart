@@ -21,16 +21,19 @@ class AppChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: selected
+              ? AppTheme.primary.withValues(alpha: 0.08)
+              : appColors.cardBackground,
           borderRadius: BorderRadius.circular(100),
           border: Border.all(
-            color: selected ? AppTheme.primary : const Color(0xFFE5E5EA),
+            color: selected ? AppTheme.primary : appColors.border,
             width: selected ? 1.3 : 1,
           ),
         ),
@@ -39,7 +42,7 @@ class AppChip extends StatelessWidget {
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: selected ? AppTheme.primary : AppTheme.textGrey,
+            color: selected ? AppTheme.primary : appColors.textSecondary,
           ),
         ),
       ),

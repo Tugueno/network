@@ -4,22 +4,21 @@ import 'package:ncapp/features/advance_req/widgets/advance_req_document_controls
 import 'package:ncapp/features/advance_req/widgets/advance_req_document_dialogs.dart';
 import 'package:ncapp/features/advance_req/widgets/advance_req_document_fields.dart';
 
-
-
 // ════════════════════════════════════════════════════════════
 //  Info card — Үлдэгдэл / Нийт хаах
 // ════════════════════════════════════════════════════════════
-
 
 class AdvanceReqDocumentFormCard extends StatefulWidget {
   final bool isSubmitted;
   const AdvanceReqDocumentFormCard({required this.isSubmitted});
 
   @override
-  State<AdvanceReqDocumentFormCard> createState() => _AdvanceReqDocumentFormCardState();
+  State<AdvanceReqDocumentFormCard> createState() =>
+      _AdvanceReqDocumentFormCardState();
 }
 
-class _AdvanceReqDocumentFormCardState extends State<AdvanceReqDocumentFormCard> {
+class _AdvanceReqDocumentFormCardState
+    extends State<AdvanceReqDocumentFormCard> {
   int _selectedTab = 0;
   String? _attachedFile;
   bool _isReadFailed = false;

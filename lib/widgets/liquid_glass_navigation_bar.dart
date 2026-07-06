@@ -1,153 +1,328 @@
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:liquid_glass_bar/liquid_glass_bar.dart' as lgb;
-import 'package:ncapp/theme/app_theme.dart';
+import 'package:flutter/services.dart';
+
+class LiquidGlassTabIndicatorState {
+  final double position;
+  final int activeIndex;
+  final bool animate;
+  final double stretch;
+  final int reactionId;
+
+  const LiquidGlassTabIndicatorState({
+    required this.position,
+    required this.activeIndex,
+    required this.animate,
+    this.stretch = 0,
+    this.reactionId = 0,
+  });
+
+  const LiquidGlassTabIndicatorState.centered(int index)
+    : position = index * 1.0,
+      activeIndex = index,
+      animate = false,
+      stretch = 0,
+      reactionId = 0;
+}
 
 class LiquidGlassNavigationItem {
-  final IconData icon;
+  final String symbolName;
+  final String? selectedSymbolName;
+  final IconData fallbackIcon;
+  final IconData? selectedFallbackIcon;
   final String label;
   final VoidCallback onTap;
   final bool destructive;
-  final bool selected;
 
   const LiquidGlassNavigationItem({
-    required this.icon,
+    required this.symbolName,
+    required this.fallbackIcon,
     required this.label,
     required this.onTap,
+    this.selectedSymbolName,
+    this.selectedFallbackIcon,
     this.destructive = false,
-    this.selected = false,
   });
 }
 
-class LiquidGlassNavigationBar extends StatefulWidget {
+class LiquidGlassNavigationBar extends StatelessWidget {
   final List<LiquidGlassNavigationItem> items;
-  final int? currentIndex;
+  final ValueListenable<LiquidGlassTabIndicatorState> indicatorState;
   final ValueChanged<int>? onItemSelected;
   final bool useSafeArea;
   final EdgeInsets safeAreaMinimum;
   final double? maxWidth;
   final double height;
   final double borderRadius;
+  final Color? tint;
+  final Color? backgroundColor;
 
   const LiquidGlassNavigationBar({
     super.key,
     required this.items,
-    this.currentIndex,
+    required this.indicatorState,
     this.onItemSelected,
     this.useSafeArea = true,
     this.safeAreaMinimum = const EdgeInsets.fromLTRB(14, 0, 14, 18),
     this.maxWidth = 430,
-    this.height = 62,
+    this.height = 85,
     this.borderRadius = 36,
+    this.tint,
+    this.backgroundColor,
   });
 
   @override
-  State<LiquidGlassNavigationBar> createState() =>
-      _LiquidGlassNavigationBarState();
-}
+  Widget build(BuildContext context) {
+    if (items.length < 2) return const SizedBox.shrink();
 
-class _LiquidGlassNavigationBarState extends State<LiquidGlassNavigationBar> {
-  static const _selectedBlue = Color(0xFF0A84FF);
-  static const _glassSettings = lgb.LiquidGlassSettings(
-    glassColor: Color(0xB8FFFFFF),
-    thickness: 28,
-    blur: 16,
-    chromaticAberration: 0.14,
-    lightIntensity: 0.74,
-    refractiveIndex: 1.34,
-    saturation: 1.16,
-    ambientStrength: 0.56,
-    lightAngle: 0.78,
-  );
+    final trailingItem = items.last.destructive ? items.last : null;
+    final tabItems = trailingItem == null
+        ? items
+        : items.sublist(0, items.length - 1);
 
-  late int _selectedIndex = _initialSelectedIndex(widget.items);
+    Widget bar = ValueListenableBuilder<LiquidGlassTabIndicatorState>(
+      valueListenable: indicatorState,
+      builder: (context, state, _) {
+        final currentIndex = state.activeIndex
+            .clamp(0, tabItems.length - 1)
+            .toInt();
 
-  @override
-  void didUpdateWidget(covariant LiquidGlassNavigationBar oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    final explicit =
-        widget.currentIndex ?? widget.items.indexWhere((item) => item.selected);
-    if (explicit >= 0 && explicit != _selectedIndex) {
-      _selectedIndex = explicit;
-    } else if (_selectedIndex >= widget.items.length) {
-      _selectedIndex = _initialSelectedIndex(widget.items);
+        return _LiquidGlassFallbackTabBar(
+          items: tabItems,
+          trailingItem: trailingItem,
+          currentIndex: currentIndex,
+          height: height,
+          borderRadius: borderRadius,
+          backgroundColor: backgroundColor,
+          onTap: _handleTap,
+        );
+      },
+    );
+
+    if (maxWidth != null) {
+      bar = ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: maxWidth!),
+        child: bar,
+      );
     }
-  }
 
-  static int _initialSelectedIndex(List<LiquidGlassNavigationItem> items) {
-    if (items.isEmpty) return 0;
-    final explicit = items.indexWhere((item) => item.selected);
-    if (explicit >= 0) return explicit;
-    return (items.length / 2).floor().clamp(0, items.length - 1);
+    bar = Align(alignment: Alignment.bottomCenter, heightFactor: 1, child: bar);
+
+    if (!useSafeArea) return bar;
+
+    return SafeArea(top: false, minimum: safeAreaMinimum, child: bar);
   }
 
   void _handleTap(int index) {
-    if (index < 0 || index >= widget.items.length) return;
-    setState(() => _selectedIndex = index);
-    widget.onItemSelected?.call(index);
-    widget.items[index].onTap();
+    if (index < 0 || index >= items.length) return;
+    HapticFeedback.selectionClick();
+    onItemSelected?.call(index);
+    items[index].onTap();
   }
+}
+
+class _LiquidGlassFallbackTabBar extends StatelessWidget {
+  final List<LiquidGlassNavigationItem> items;
+  final LiquidGlassNavigationItem? trailingItem;
+  final int currentIndex;
+  final double height;
+  final double borderRadius;
+  final Color? backgroundColor;
+  final ValueChanged<int> onTap;
+
+  const _LiquidGlassFallbackTabBar({
+    required this.items,
+    required this.trailingItem,
+    required this.currentIndex,
+    required this.height,
+    required this.borderRadius,
+    required this.backgroundColor,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    if (widget.items.length < 2) return const SizedBox.shrink();
+    final trailingItem = this.trailingItem;
+    final trailingIndex = items.length;
 
-    final bar = Center(
-      heightFactor: 1,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: widget.maxWidth ?? double.infinity,
-        ),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(widget.borderRadius),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.16),
-                blurRadius: 30,
-                spreadRadius: -9,
-                offset: const Offset(0, 16),
-              ),
-              BoxShadow(
-                color: AppTheme.primary.withValues(alpha: 0.10),
-                blurRadius: 22,
-                spreadRadius: -12,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: lgb.LiquidGlassBar(
-            items: [
-              for (final item in widget.items)
-                lgb.LiquidGlassBarItem(iconData: item.icon, label: item.label),
-            ],
-            currentIndex: _selectedIndex,
-            onTap: _handleTap,
-            style: lgb.LiquidGlassBarStyle(
-              liquidGlassSettings: _glassSettings,
-              activeColor: widget.items[_selectedIndex].destructive
-                  ? AppTheme.error
-                  : _selectedBlue,
-              inactiveColor: const Color(0xFF17191D),
-              borderRadius: widget.borderRadius,
-              height: widget.height,
-              padding: EdgeInsets.zero,
-              animationDuration: const Duration(milliseconds: 260),
-              animationCurve: Curves.easeOutCubic,
-              iconSize: 25,
-              selectedIconScale: 1.08,
-              labelStyle: const TextStyle(
-                fontSize: 10.5,
-                height: 1.05,
-                fontWeight: FontWeight.w700,
+    return SizedBox(
+      height: height,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: _LiquidGlassPillSurface(
+              borderRadius: borderRadius,
+              backgroundColor: backgroundColor,
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child: Row(
+                  children: [
+                    for (var index = 0; index < items.length; index++)
+                      Expanded(
+                        child: _LiquidGlassFallbackTabItem(
+                          item: items[index],
+                          selected: index == currentIndex,
+                          onTap: () => onTap(index),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
+          ),
+          if (trailingItem != null) ...[
+            const SizedBox(width: 16),
+            SizedBox.square(
+              dimension: height,
+              child: _LiquidGlassPillSurface(
+                borderRadius: borderRadius,
+                backgroundColor: backgroundColor,
+                child: _LiquidGlassFallbackTabItem(
+                  item: trailingItem,
+                  selected: false,
+                  iconOnly: true,
+                  onTap: () => onTap(trailingIndex),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _LiquidGlassPillSurface extends StatelessWidget {
+  final Widget child;
+  final double borderRadius;
+  final Color? backgroundColor;
+
+  const _LiquidGlassPillSurface({
+    required this.child,
+    required this.borderRadius,
+    required this.backgroundColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final fill =
+        backgroundColor ??
+        (isDark
+            ? CupertinoColors.white.withValues(alpha: 0.16)
+            : CupertinoColors.white.withValues(alpha: 0.20));
+    final borderColor = isDark
+        ? CupertinoColors.white.withValues(alpha: 0.12)
+        : CupertinoColors.white.withValues(alpha: 0.42);
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(borderRadius),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.10),
+            blurRadius: 20,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(borderRadius),
+              color: fill,
+              border: Border.all(color: borderColor, width: 0.8),
+            ),
+            child: child,
           ),
         ),
       ),
     );
+  }
+}
 
-    if (!widget.useSafeArea) return bar;
+class _LiquidGlassFallbackTabItem extends StatelessWidget {
+  final LiquidGlassNavigationItem item;
+  final bool selected;
+  final bool iconOnly;
+  final VoidCallback onTap;
 
-    return SafeArea(top: false, minimum: widget.safeAreaMinimum, child: bar);
+  const _LiquidGlassFallbackTabItem({
+    required this.item,
+    required this.selected,
+    required this.onTap,
+    this.iconOnly = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final color = selected
+        ? CupertinoColors.systemBlue
+        : (isDark
+              ? CupertinoColors.white.withValues(alpha: 0.62)
+              : CupertinoColors.black.withValues(alpha: 0.50));
+    final labelColor = isDark
+        ? CupertinoColors.white.withValues(alpha: 0.82)
+        : CupertinoColors.black;
+    final icon = selected
+        ? item.selectedFallbackIcon ?? item.fallbackIcon
+        : item.fallbackIcon;
+    final selectedFill = isDark
+        ? CupertinoColors.white.withValues(alpha: 0.12)
+        : const Color(0xFFEDEDED);
+
+    return Semantics(
+      button: true,
+      selected: selected && !iconOnly,
+      label: item.label,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOutCubic,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            color: selected ? selectedFill : Colors.transparent,
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: iconOnly ? 8 : 6,
+            vertical: iconOnly ? 8 : 7,
+          ),
+          child: iconOnly
+              ? Center(child: Icon(icon, color: color, size: 24))
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(icon, color: color, size: 19),
+                    const SizedBox(height: 2),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        item.label,
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: labelColor,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 0.06,
+                          height: 13 / 11,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+        ),
+      ),
+    );
   }
 }

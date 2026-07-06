@@ -19,6 +19,7 @@ class PaymentReqApprovalHistorySheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     final doneSteps = steps
         .asMap()
         .entries
@@ -28,28 +29,28 @@ class PaymentReqApprovalHistorySheet extends StatelessWidget {
     return BottomSheetContainer(
       maxHeightFactor: 0.85,
       children: [
-          const SizedBox(height: 16),
-          const Text(
-            'Дэлгэрэнгүй мэдээлэл',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textDark,
+        const SizedBox(height: 16),
+        Text(
+          'Дэлгэрэнгүй мэдээлэл',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: appColors.textPrimary,
+          ),
+        ),
+        const Divider(height: 20),
+        Flexible(
+          child: ListView.builder(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
+            shrinkWrap: true,
+            itemCount: doneSteps.length,
+            itemBuilder: (_, i) => _HistoryItem(
+              step: doneSteps[i].value,
+              avatarColor: _colorForIndex(doneSteps[i].key),
             ),
           ),
-          const Divider(height: 20),
-          Flexible(
-            child: ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
-              shrinkWrap: true,
-              itemCount: doneSteps.length,
-              itemBuilder: (_, i) => _HistoryItem(
-                step: doneSteps[i].value,
-                avatarColor: _colorForIndex(doneSteps[i].key),
-              ),
-            ),
-          ),
-        ],
+        ),
+      ],
     );
   }
 }
@@ -61,6 +62,7 @@ class _HistoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Column(
@@ -87,19 +89,19 @@ class _HistoryItem extends StatelessWidget {
                   children: [
                     Text(
                       step.person,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppTheme.textDark,
+                        color: appColors.textPrimary,
                       ),
                     ),
                     if (step.date.isNotEmpty)
                       Text(
                         step.date,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: AppTheme.textGrey,
+                          color: appColors.textSecondary,
                         ),
                       ),
                   ],
@@ -113,7 +115,7 @@ class _HistoryItem extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppTheme.bgColor,
+              color: appColors.subtleFill,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -121,26 +123,30 @@ class _HistoryItem extends StatelessWidget {
               children: [
                 Text(
                   step.label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: AppTheme.textDark,
+                    color: appColors.textPrimary,
                   ),
                 ),
                 if (step.comment != null && step.comment!.isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Text(
                     '"${step.comment}"',
-                    style: const TextStyle(
-                        fontSize: 12, color: Color(0xFF555555)),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: appColors.textSecondary,
+                    ),
                   ),
                 ],
                 if (step.message != null && step.message!.isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Text(
                     step.message!,
-                    style: const TextStyle(
-                        fontSize: 13, color: AppTheme.textGrey),
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: appColors.textSecondary,
+                    ),
                   ),
                 ],
               ],
@@ -167,4 +173,3 @@ class _ArrowIcon extends StatelessWidget {
     );
   }
 }
-

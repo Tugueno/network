@@ -10,10 +10,11 @@ class RequestsBottomActions extends StatelessWidget {
   const RequestsBottomActions({super.key, required this.controller});
 
   void _showConfirm(BuildContext context, {required bool isApprove}) {
+    final appColors = AppTheme.colors(context);
     Get.bottomSheet(
       RequestsConfirmSheet(controller: controller, isApprove: isApprove),
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: appColors.sheetBackground,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -22,15 +23,16 @@ class RequestsBottomActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: appColors.cardBackground,
         boxShadow: [
           BoxShadow(
-            color: Color(0x15000000),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 12,
-            offset: Offset(0, -4),
+            offset: const Offset(0, -4),
           ),
         ],
       ),
@@ -124,4 +126,3 @@ class RequestsBottomActions extends StatelessWidget {
     );
   }
 }
-

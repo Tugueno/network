@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ncapp/theme/app_theme.dart';
 
 /// Bottom sheet-ийн дээд талд харагдах саарал "чирэх бариул" (drag handle).
 ///
@@ -9,12 +10,13 @@ class SheetHandle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Center(
       child: Container(
         width: 36,
         height: 4,
         decoration: BoxDecoration(
-          color: const Color(0xFFE5E5EA),
+          color: appColors.border,
           borderRadius: BorderRadius.circular(2),
         ),
       ),

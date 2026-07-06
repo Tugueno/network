@@ -24,6 +24,7 @@ class PaymentReqDetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return AppCard(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -33,21 +34,21 @@ class PaymentReqDetailHeader extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             item.formattedAmount,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w700,
-              color: AppTheme.textDark,
+              color: appColors.textPrimary,
             ),
           ),
           const SizedBox(height: 2),
-          const Text(
+          Text(
             'Нийт төсөвлөсөн',
-            style: TextStyle(fontSize: 14, color: AppTheme.textGrey),
+            style: TextStyle(fontSize: 14, color: appColors.textSecondary),
           ),
           const SizedBox(height: 8),
           PaymentReqStatusBadge(status: item.status),
           const SizedBox(height: 12),
-          const Divider(height: 1, thickness: 1, color: Color(0xFFF0F0F0)),
+          Divider(height: 1, thickness: 1, color: appColors.border),
           const SizedBox(height: 12),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,20 +61,20 @@ class PaymentReqDetailHeader extends StatelessWidget {
                   children: [
                     Text(
                       item.assignee,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppTheme.textDark,
+                        color: appColors.textPrimary,
                       ),
                     ),
                     if (item.assigneeLore.isNotEmpty) ...[
                       const SizedBox(height: 1),
                       Text(
                         item.assigneeLore,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
-                          color: AppTheme.textDark,
+                          color: appColors.textPrimary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -83,9 +84,9 @@ class PaymentReqDetailHeader extends StatelessWidget {
                       const SizedBox(height: 1),
                       Text(
                         item.assigneeRole,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
-                          color: AppTheme.textGrey,
+                          color: appColors.textSecondary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -122,12 +123,12 @@ class PaymentReqDetailHeader extends StatelessWidget {
             child: OutlinedButton(
               onPressed: () => _showFullDetailSheet(context, item),
               style: OutlinedButton.styleFrom(
-                backgroundColor: const Color(0xFFF0F0F0),
+                backgroundColor: appColors.subtleFill,
                 side: BorderSide.none,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                foregroundColor: AppTheme.textDark,
+                foregroundColor: appColors.textPrimary,
               ),
               child: const Text('Дэлгэрэнгүй харах'),
             ),

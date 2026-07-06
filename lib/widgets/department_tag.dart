@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 const _tagColors = {
   'PUR': Color(0xFF9B59B6),
   'NPL': Color(0xFF3498DB),
-  'HR':  Color(0xFF2ECC71),
+  'HR': Color(0xFF2ECC71),
   'FAD': Color(0xFFE67E22),
 };
 

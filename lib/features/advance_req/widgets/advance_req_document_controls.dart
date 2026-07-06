@@ -15,6 +15,7 @@ class AdvanceReqDocumentTabSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return SizedBox(
       height: 34,
       child: ListView.separated(
@@ -29,10 +30,10 @@ class AdvanceReqDocumentTabSelector extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 14),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: appColors.cardBackground,
                 borderRadius: BorderRadius.circular(100),
                 border: Border.all(
-                  color: selected ? AppTheme.primary : AppTheme.borderColor,
+                  color: selected ? AppTheme.primary : appColors.border,
                   width: selected ? 1.3 : 1,
                 ),
               ),
@@ -41,7 +42,7 @@ class AdvanceReqDocumentTabSelector extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: selected ? AppTheme.primary : AppTheme.textGrey,
+                  color: selected ? AppTheme.primary : appColors.textSecondary,
                 ),
               ),
             ),
@@ -64,28 +65,29 @@ class SuggestedAdvanceDocsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
-          color: const Color(0xFFF5F6FC),
+          color: appColors.subtleFill,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
           children: [
-            const Text(
+            Text(
               'Санал болгож буй баримтууд',
-              style: TextStyle(fontSize: 14, color: AppTheme.textGrey),
+              style: TextStyle(fontSize: 14, color: appColors.textSecondary),
             ),
             const Spacer(),
             Text(
               '$count',
-              style: const TextStyle(fontSize: 14, color: AppTheme.textGrey),
+              style: TextStyle(fontSize: 14, color: appColors.textSecondary),
             ),
             const SizedBox(width: 4),
-            const Icon(Icons.unfold_more, size: 18, color: AppTheme.textGrey),
+            Icon(Icons.unfold_more, size: 18, color: appColors.textSecondary),
           ],
         ),
       ),
@@ -115,7 +117,10 @@ class AdvanceReqFileUploadBox extends StatelessWidget {
     return GestureDetector(
       onTap: hasFile ? null : onPick,
       child: CustomPaint(
-        painter: AdvanceReqDashedBorderPainter(color: AppTheme.primary, radius: 10),
+        painter: AdvanceReqDashedBorderPainter(
+          color: AppTheme.primary,
+          radius: 10,
+        ),
         child: SizedBox(
           width: double.infinity,
           height: 52,
@@ -161,6 +166,7 @@ class _AttachedFileRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Row(
       children: [
         const Icon(
@@ -183,7 +189,7 @@ class _AttachedFileRow extends StatelessWidget {
         ),
         GestureDetector(
           onTap: onRemove,
-          child: const Icon(Icons.close, size: 18, color: AppTheme.textGrey),
+          child: Icon(Icons.close, size: 18, color: appColors.textSecondary),
         ),
       ],
     );
@@ -228,4 +234,3 @@ class AdvanceReqOcrWarningBox extends StatelessWidget {
 // ════════════════════════════════════════════════════════════
 //  Partial section — toggle + amount input + computed total
 // ════════════════════════════════════════════════════════════
-

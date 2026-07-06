@@ -12,6 +12,7 @@ class FilterOverlayView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<RequestsController>();
+    final appColors = AppTheme.colors(context);
     return SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -23,7 +24,7 @@ class FilterOverlayView extends StatelessWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppTheme.borderColor,
+                color: appColors.border,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -36,36 +37,38 @@ class FilterOverlayView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // ── Сараар шүүх ──────────────────────
-                  const Text(
+                  Text(
                     'Сараар шүүх',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: AppTheme.textDark,
+                      color: appColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Obx(() => Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: List.generate(
-                          controller.months.length,
-                          (i) => RequestsFilterChip(
-                            label: controller.months[i],
-                            selected: controller.filterMonthIndex.value == i,
-                            onTap: () => controller.toggleFilterMonth(i),
-                          ),
+                  Obx(
+                    () => Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: List.generate(
+                        controller.months.length,
+                        (i) => RequestsFilterChip(
+                          label: controller.months[i],
+                          selected: controller.filterMonthIndex.value == i,
+                          onTap: () => controller.toggleFilterMonth(i),
                         ),
-                      )),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 20),
 
                   // ── Ажилчнаар шүүх ──────────────────
-                  const Text(
+                  Text(
                     'Ажилчнаар шүүх',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: AppTheme.textDark,
+                      color: appColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -75,7 +78,7 @@ class FilterOverlayView extends StatelessWidget {
                       Get.bottomSheet(
                         const FilterEmployeeOverlayView(),
                         isScrollControlled: true,
-                        backgroundColor: Colors.white,
+                        backgroundColor: appColors.sheetBackground,
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.vertical(
                             top: Radius.circular(20),
@@ -87,28 +90,30 @@ class FilterOverlayView extends StatelessWidget {
                   const SizedBox(height: 20),
 
                   // ── Төрлөөр шүүх ────────────────────
-                  const Text(
+                  Text(
                     'Төрлөөр шүүх',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: AppTheme.textDark,
+                      color: appColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Obx(() => Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: RequestType.values
-                            .map((type) => RequestsTypeChip(
-                                  type: type,
-                                  selected: controller.filterTypes
-                                      .contains(type),
-                                  onTap: () =>
-                                      controller.toggleFilterType(type),
-                                ))
-                            .toList(),
-                      )),
+                  Obx(
+                    () => Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: RequestType.values
+                          .map(
+                            (type) => RequestsTypeChip(
+                              type: type,
+                              selected: controller.filterTypes.contains(type),
+                              onTap: () => controller.toggleFilterType(type),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
                   const SizedBox(height: 20),
                 ],
               ),
@@ -129,14 +134,16 @@ class FilterOverlayView extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primary,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(28)),
+                    borderRadius: BorderRadius.circular(28),
+                  ),
                 ),
                 child: const Text(
                   'Шүүж харах',
                   style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),

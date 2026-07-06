@@ -108,6 +108,6 @@ class RequestModel {
     this.fileUrl,
     RequestStatus initialStatus = RequestStatus.irsen,
     bool initialSelected = false,
-  })  : status = initialStatus.obs,
-        isSelected = initialSelected.obs;
+  }) : status = initialStatus.obs,
+       isSelected = initialSelected.obs;
 }

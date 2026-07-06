@@ -9,54 +9,55 @@ class PaymentReqFullDetailSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return BottomSheetContainer(
       maxHeightFactor: 0.85,
       children: [
-          const SizedBox(height: 16),
-          const Text(
-            'Дэлгэрэнгүй мэдээлэл',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textDark,
-            ),
+        const SizedBox(height: 16),
+        Text(
+          'Дэлгэрэнгүй мэдээлэл',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: appColors.textPrimary,
           ),
-          Flexible(
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 32, 16, 32),
-              shrinkWrap: true,
-              children: [
-                if (item.requestDetails.isNotEmpty) ...[
-                  const Text(
-                    'Хүсэлтийн мэдээлэл',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.textDark,
-                    ),
+        ),
+        Flexible(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(16, 32, 16, 32),
+            shrinkWrap: true,
+            children: [
+              if (item.requestDetails.isNotEmpty) ...[
+                Text(
+                  'Хүсэлтийн мэдээлэл',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: appColors.textPrimary,
                   ),
-                  const SizedBox(height: 12),
-                  ...item.requestDetails.map((d) => _DetailRow(item: d)),
-                  const SizedBox(height: 16),
-                  const Divider(height: 1, thickness: 1, color: Color(0xFFDADADA)),
-                  const SizedBox(height: 16),
-                ],
-                if (item.budgetDetails.isNotEmpty) ...[
-                  const Text(
-                    'Төсвийн мэдээлэл',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.textDark,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  ...item.budgetDetails.map((d) => _DetailRow(item: d)),
-                ],
+                ),
+                const SizedBox(height: 12),
+                ...item.requestDetails.map((d) => _DetailRow(item: d)),
+                const SizedBox(height: 16),
+                Divider(height: 1, thickness: 1, color: appColors.border),
+                const SizedBox(height: 16),
               ],
-            ),
+              if (item.budgetDetails.isNotEmpty) ...[
+                Text(
+                  'Төсвийн мэдээлэл',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: appColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ...item.budgetDetails.map((d) => _DetailRow(item: d)),
+              ],
+            ],
           ),
-        ],
+        ),
+      ],
     );
   }
 }
@@ -67,6 +68,7 @@ class _DetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: Column(
@@ -74,19 +76,16 @@ class _DetailRow extends StatelessWidget {
         children: [
           Text(
             item.subtitle,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: AppTheme.textDark,
+              color: appColors.textPrimary,
             ),
           ),
           const SizedBox(height: 2),
           Text(
             item.info,
-            style: const TextStyle(
-              fontSize: 13,
-              color: AppTheme.textGrey,
-            ),
+            style: TextStyle(fontSize: 13, color: appColors.textSecondary),
           ),
         ],
       ),

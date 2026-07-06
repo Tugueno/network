@@ -26,19 +26,24 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 80, color: iconColor ?? Colors.grey.shade300),
+          Icon(
+            icon,
+            size: 80,
+            color: iconColor ?? appColors.textSecondary.withValues(alpha: 0.35),
+          ),
           const SizedBox(height: 16),
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
-              color: AppTheme.textDark,
+              color: appColors.textPrimary,
             ),
           ),
           // subtitle байгаа үед л хоёр дахь текст + зайг нэмнэ
@@ -47,7 +52,7 @@ class EmptyState extends StatelessWidget {
             Text(
               subtitle!,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 14, color: AppTheme.textGrey),
+              style: TextStyle(fontSize: 14, color: appColors.textSecondary),
             ),
           ],
           if (actionLabel != null && onAction != null) ...[

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ncapp/theme/app_theme.dart';
 import 'package:ncapp/theme/app_text_styles.dart';
 
 /// Энгийн `Text`-д зориулсан тав тухтай widget. Загварыг [AppTextStyles]-аас
@@ -251,12 +252,23 @@ class AppText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
+    Color? resolveColor(Color? value) {
+      return switch (value) {
+        AppTheme.textDark => appColors.textPrimary,
+        AppTheme.textGrey => appColors.textSecondary,
+        _ => value,
+      };
+    }
+
+    final fallbackColor = resolveColor(style.color);
+
     return Text(
       data,
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
-      style: color == null ? style : style.copyWith(color: color),
+      style: style.copyWith(color: resolveColor(color) ?? fallbackColor),
     );
   }
 }

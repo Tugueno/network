@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../controllers/auth_controller.dart';
 import '../../theme/app_system_ui.dart';
@@ -12,51 +11,45 @@ class AuthView extends GetView<AuthController> {
 
   @override
   Widget build(BuildContext context) {
-    final overlayStyle = AppSystemUi.forView(topColor: Colors.white);
-    AppSystemUi.apply(overlayStyle);
+    final appColors = AppTheme.colors(context);
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: overlayStyle,
-      child: const ColoredBox(color: Colors.white, child: _AuthScaffold()),
+    return StatusAwarePage(
+      backgroundColor: appColors.cardBackground,
+      bottomNavigationBar: ColoredBox(
+        color: appColors.cardBackground,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: Text(
+            'Version 2.0.0',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: appColors.textSecondary, fontSize: 12),
+          ),
+        ),
+      ),
+      child: const _AuthBody(),
     );
   }
 }
 
-class _AuthScaffold extends GetView<AuthController> {
-  const _AuthScaffold();
+class _AuthBody extends GetView<AuthController> {
+  const _AuthBody();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      bottomNavigationBar: const ColoredBox(
-        color: Colors.white,
-        child: Padding(
-          padding: EdgeInsets.only(bottom: 20),
-          child: Text(
-            'Version 2.0.0',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: AppTheme.textGrey, fontSize: 12),
-          ),
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Obx(() {
-            // Logout хийсний дараа → rememberedEmail байгаа + isLoggedOut = true
-            if (controller.isLoggedOut.value && controller.hasRemembered) {
-              return _LoggedOutSection(controller: controller);
-            }
-            // Saved login — нэвтэрсэн, биометрик хуудас алгасаад auth руу ирсэн
-            if (controller.hasRemembered && !controller.isLoggedOut.value) {
-              return _SavedLoginSection(controller: controller);
-            }
-            // Энгийн login
-            return _NormalLoginSection(controller: controller);
-          }),
-        ),
-      ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Obx(() {
+        // Logout хийсний дараа → rememberedEmail байгаа + isLoggedOut = true
+        if (controller.isLoggedOut.value && controller.hasRemembered) {
+          return _LoggedOutSection(controller: controller);
+        }
+        // Saved login — нэвтэрсэн, биометрик хуудас алгасаад auth руу ирсэн
+        if (controller.hasRemembered && !controller.isLoggedOut.value) {
+          return _SavedLoginSection(controller: controller);
+        }
+        // Энгийн login
+        return _NormalLoginSection(controller: controller);
+      }),
     );
   }
 }
@@ -135,6 +128,7 @@ class _SavedLoginSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -213,7 +207,7 @@ class _SavedLoginSection extends StatelessWidget {
                 controller.showPasswordField.value
                     ? 'Face ID ашиглан нэвтрэх'
                     : 'Нууц үг ашиглан нэвтрэх',
-                style: const TextStyle(color: AppTheme.textGrey, fontSize: 14),
+                style: TextStyle(color: appColors.textSecondary, fontSize: 14),
               ),
             ),
           ),
@@ -249,6 +243,7 @@ class _LoggedOutSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -302,9 +297,9 @@ class _LoggedOutSection extends StatelessWidget {
         Center(
           child: GestureDetector(
             onTap: controller.switchAccount,
-            child: const Text(
+            child: Text(
               'Өөр акаунтаар нэвтрэх',
-              style: TextStyle(color: AppTheme.textGrey, fontSize: 14),
+              style: TextStyle(color: appColors.textSecondary, fontSize: 14),
             ),
           ),
         ),
@@ -321,12 +316,12 @@ class _Title extends StatelessWidget {
   const _Title();
 
   @override
-  Widget build(BuildContext context) => const Text(
+  Widget build(BuildContext context) => Text(
     'NetWork-д тавтай морил.',
     style: TextStyle(
       fontSize: 26,
       fontWeight: FontWeight.w700,
-      color: AppTheme.textDark,
+      color: Theme.of(context).colorScheme.onSurface,
     ),
   );
 }
@@ -338,13 +333,14 @@ class _UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.borderColor.withValues(alpha: 0.6)),
+        border: Border.all(color: appColors.border),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.06),
@@ -386,8 +382,8 @@ class _UserCard extends StatelessWidget {
             children: [
               Text(
                 name,
-                style: const TextStyle(
-                  color: AppTheme.textDark,
+                style: TextStyle(
+                  color: appColors.textPrimary,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -395,7 +391,7 @@ class _UserCard extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 email,
-                style: const TextStyle(color: AppTheme.textGrey, fontSize: 12),
+                style: TextStyle(color: appColors.textSecondary, fontSize: 12),
               ),
             ],
           ),
@@ -426,7 +422,8 @@ class _InputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderColor = hasError ? AppTheme.error : AppTheme.borderColor;
+    final appColors = AppTheme.colors(context);
+    final borderColor = hasError ? AppTheme.error : appColors.border;
     final focusColor = hasError ? AppTheme.error : AppTheme.primary;
     final width = hasError ? 1.5 : 1.0;
 
@@ -439,7 +436,7 @@ class _InputField extends StatelessWidget {
         hintText: hint,
         suffixIcon: suffix,
         filled: true,
-        fillColor: Colors.white,
+        fillColor: appColors.inputFill,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 14,
@@ -498,10 +495,10 @@ class _FieldLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Text(
     text,
-    style: const TextStyle(
+    style: TextStyle(
       fontSize: 13,
       fontWeight: FontWeight.w500,
-      color: AppTheme.textDark,
+      color: AppTheme.colors(context).textPrimary,
     ),
   );
 }
@@ -515,7 +512,7 @@ class _EyeIcon extends StatelessWidget {
   Widget build(BuildContext context) => IconButton(
     icon: Icon(
       obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-      color: AppTheme.textGrey,
+      color: AppTheme.colors(context).textSecondary,
       size: 20,
     ),
     onPressed: onTap,

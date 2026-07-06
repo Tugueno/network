@@ -29,6 +29,7 @@ class PaymentReqApprovalFlow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (steps.isEmpty) return const SizedBox.shrink();
+    final appColors = AppTheme.colors(context);
 
     final card = AppCard(
       padding: const EdgeInsets.all(16),
@@ -38,13 +39,13 @@ class PaymentReqApprovalFlow extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Text(
                   'Батлах урсгал',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textDark,
+                    color: appColors.textPrimary,
                   ),
                 ),
               ),
@@ -125,6 +126,7 @@ class _StepRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,18 +185,18 @@ class _StepRow extends StatelessWidget {
                 children: [
                   Text(
                     step.label,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: AppTheme.textDark,
+                      color: appColors.textPrimary,
                     ),
                   ),
                   Text(
                     step.person,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 13,
-                      color: AppTheme.textGrey,
+                      color: appColors.textSecondary,
                     ),
                   ),
                   if (step.comment != null) ...[
@@ -206,15 +208,15 @@ class _StepRow extends StatelessWidget {
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: AppTheme.bgColor,
+                        color: appColors.subtleFill,
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: const Color(0xFFE5E5EA)),
+                        border: Border.all(color: appColors.border),
                       ),
                       child: Text(
                         '"${step.comment}"',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF555555),
+                          color: appColors.textSecondary,
                         ),
                       ),
                     ),
@@ -223,10 +225,10 @@ class _StepRow extends StatelessWidget {
                     const SizedBox(height: 6),
                     Text(
                       step.date,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 12,
-                        color: AppTheme.textDark,
+                        color: appColors.textPrimary,
                       ),
                     ),
                   ],

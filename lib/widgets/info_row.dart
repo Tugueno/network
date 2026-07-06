@@ -17,6 +17,7 @@ class InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -29,10 +30,10 @@ class InfoRow extends StatelessWidget {
                 flex: 4,
                 child: Text(
                   label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textDark,
+                    color: appColors.textPrimary,
                   ),
                 ),
               ),
@@ -46,7 +47,7 @@ class InfoRow extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 14,
-                    color: AppTheme.textGrey,
+                    color: appColors.textSecondary,
                     fontWeight: valueWeight,
                   ),
                 ),
@@ -55,7 +56,7 @@ class InfoRow extends StatelessWidget {
           ),
         ),
         if (showDivider)
-          const Divider(height: 1, thickness: 1, color: Color(0xFFF0F0F0)),
+          Divider(height: 1, thickness: 1, color: appColors.border),
       ],
     );
   }

@@ -57,7 +57,6 @@ class PaymentReqDetailView extends GetView<PaymentReqController> {
         title: item.id,
         backgroundColor: AppTheme.screenBackground,
         appBarColor: Colors.white,
-        statusBarColor: AppTheme.screenBackground,
         onBack: () => controller.closeDetail(popRoute: true),
         body: isWebLayout
             ? Stack(

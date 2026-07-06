@@ -8,6 +8,7 @@ import 'package:ncapp/features/requests/widgets/request_toast.dart';
 import 'package:ncapp/features/requests/widgets/requests_bottom_actions.dart';
 import 'package:ncapp/features/requests/widgets/requests_date_header.dart';
 import 'package:ncapp/features/requests/widgets/requests_tab_bar.dart';
+import 'package:ncapp/theme/app_theme.dart';
 import 'package:ncapp/widgets/app_scaffold.dart';
 
 class RequestsView extends GetView<RequestsController> {
@@ -17,8 +18,8 @@ class RequestsView extends GetView<RequestsController> {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: 'Ирцийн хүсэлтүүд',
-      backgroundColor: const Color(0xFFF6F6F6),
-      appBarColor: const Color(0xFFF6F6F6),
+      backgroundColor: AppTheme.bgColor,
+      appBarColor: AppTheme.bgColor,
       body: Stack(
         fit: StackFit.expand,
         children: [

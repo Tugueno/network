@@ -34,7 +34,10 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
     _start = controller.rangeStart.value;
     _end = controller.rangeEnd.value;
     final now = DateTime.now();
-    _displayMonth = DateTime(_start?.year ?? now.year, _start?.month ?? now.month);
+    _displayMonth = DateTime(
+      _start?.year ?? now.year,
+      _start?.month ?? now.month,
+    );
   }
 
   void _apply() {
@@ -53,42 +56,48 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
     return BottomSheetContainer(
       maxHeightFactor: 0.9,
       children: [
-          Flexible(
-            child: SingleChildScrollView(
-              child: _showCalendar ? _buildCalendarPage() : _buildMainPage(),
-            ),
+        Flexible(
+          child: SingleChildScrollView(
+            child: _showCalendar ? _buildCalendarPage() : _buildMainPage(),
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(
-                16, 8, 16, MediaQuery.of(context).padding.bottom + 16),
-            child: SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: _apply,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primary,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(28)),
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+            16,
+            8,
+            16,
+            MediaQuery.of(context).padding.bottom + 16,
+          ),
+          child: SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton(
+              onPressed: _apply,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primary,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(28),
                 ),
-                child: const Text(
-                  'Шүүж харах',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
+              ),
+              child: const Text(
+                'Шүүж харах',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
                 ),
               ),
             ),
           ),
-        ],
+        ),
+      ],
     );
   }
 
   // ── Main filter page ───────────────────────────────────────
   Widget _buildMainPage() {
+    final appColors = AppTheme.colors(context);
     final now = DateTime.now();
     final currentQuarter = (now.month - 1) ~/ 3 + 1;
     final hasRange = _start != null && _end != null;
@@ -105,8 +114,7 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
               const SizedBox(height: 2),
               Text(
                 '${now.year} он',
-                style:
-                    const TextStyle(fontSize: 13, color: AppTheme.textGrey),
+                style: TextStyle(fontSize: 13, color: appColors.textSecondary),
               ),
             ],
           ),
@@ -174,7 +182,7 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
         const SizedBox(height: 24),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
-          child: AppText.heading('Хоногоор шүүх')
+          child: AppText.heading('Хоногоор шүүх'),
         ),
         const SizedBox(height: 4),
         GestureDetector(
@@ -184,25 +192,31 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
-                const Icon(Icons.calendar_month,
-                    size: 20, color: Color(0xFFFF3B30)),
+                const Icon(
+                  Icons.calendar_month,
+                  size: 20,
+                  color: Color(0xFFFF3B30),
+                ),
                 const SizedBox(width: 8),
                 const AppText.label('Огноо'),
                 const Spacer(),
                 Text(
                   hasRange
                       ? '${PaymentReqController.formatRangeDate(_start!)} - '
-                          '${PaymentReqController.formatRangeDate(_end!)}'
+                            '${PaymentReqController.formatRangeDate(_end!)}'
                       : 'Сонгох',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: hasRange ? FontWeight.w600 : FontWeight.w400,
-                    color: AppTheme.textGrey,
+                    color: appColors.textSecondary,
                   ),
                 ),
                 const SizedBox(width: 4),
-                const Icon(Icons.chevron_right,
-                    size: 18, color: AppTheme.textGrey),
+                Icon(
+                  Icons.chevron_right,
+                  size: 18,
+                  color: appColors.textSecondary,
+                ),
               ],
             ),
           ),
@@ -214,6 +228,7 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
 
   // ── Calendar page ──────────────────────────────────────────
   Widget _buildCalendarPage() {
+    final appColors = AppTheme.colors(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -221,16 +236,19 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
         Row(
           children: [
             IconButton(
-              icon: const Icon(Icons.arrow_back_ios,
-                  size: 16, color: AppTheme.textDark),
+              icon: Icon(
+                Icons.arrow_back_ios,
+                size: 16,
+                color: appColors.textPrimary,
+              ),
               onPressed: () => setState(() => _showCalendar = false),
             ),
-            const Text(
+            Text(
               'Хоногоор шүүх',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: AppTheme.textDark,
+                color: appColors.textPrimary,
               ),
             ),
           ],
@@ -241,35 +259,49 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
           child: Row(
             children: [
               GestureDetector(
-                onTap: () => setState(() => _displayMonth = DateTime(
-                    _displayMonth.year, _displayMonth.month - 1)),
+                onTap: () => setState(
+                  () => _displayMonth = DateTime(
+                    _displayMonth.year,
+                    _displayMonth.month - 1,
+                  ),
+                ),
                 behavior: HitTestBehavior.opaque,
-                child: const Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Icon(Icons.chevron_left,
-                      size: 22, color: AppTheme.textDark),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(
+                    Icons.chevron_left,
+                    size: 22,
+                    color: appColors.textPrimary,
+                  ),
                 ),
               ),
               Expanded(
                 child: Center(
                   child: Text(
                     '${_displayMonth.month}-р сар ${_displayMonth.year}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: AppTheme.textDark,
+                      color: appColors.textPrimary,
                     ),
                   ),
                 ),
               ),
               GestureDetector(
-                onTap: () => setState(() => _displayMonth = DateTime(
-                    _displayMonth.year, _displayMonth.month + 1)),
+                onTap: () => setState(
+                  () => _displayMonth = DateTime(
+                    _displayMonth.year,
+                    _displayMonth.month + 1,
+                  ),
+                ),
                 behavior: HitTestBehavior.opaque,
-                child: const Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Icon(Icons.chevron_right,
-                      size: 22, color: AppTheme.textDark),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(
+                    Icons.chevron_right,
+                    size: 22,
+                    color: appColors.textPrimary,
+                  ),
                 ),
               ),
             ],
@@ -285,10 +317,10 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
                   child: Center(
                     child: Text(
                       d,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: AppTheme.textGrey,
+                        color: appColors.textSecondary,
                       ),
                     ),
                   ),
@@ -311,8 +343,9 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
     final month = _displayMonth.month;
     final daysInMonth = DateTime(year, month + 1, 0).day;
     final leading = DateTime(year, month, 1).weekday - 1; // Monday first
-    final totalCells =
-        ((leading + daysInMonth) % 7 == 0) ? leading + daysInMonth : (leading + daysInMonth) + (7 - (leading + daysInMonth) % 7);
+    final totalCells = ((leading + daysInMonth) % 7 == 0)
+        ? leading + daysInMonth
+        : (leading + daysInMonth) + (7 - (leading + daysInMonth) % 7);
 
     final cells = List<DateTime>.generate(
       totalCells,
@@ -373,10 +406,12 @@ class _DayCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     final isStart = _sameDay(start, day);
     final isEnd = _sameDay(end, day);
     final hasRange = start != null && end != null;
-    final inRange = hasRange &&
+    final inRange =
+        hasRange &&
         day.isAfter(start!) &&
         day.isBefore(end!) &&
         !isStart &&
@@ -432,13 +467,14 @@ class _DayCell extends StatelessWidget {
                 '${day.day}',
                 style: TextStyle(
                   fontSize: 14,
-                  fontWeight:
-                      (isStart || isEnd) ? FontWeight.w600 : FontWeight.w400,
+                  fontWeight: (isStart || isEnd)
+                      ? FontWeight.w600
+                      : FontWeight.w400,
                   color: (isStart || isEnd)
                       ? Colors.white
                       : inMonth
-                          ? AppTheme.textDark
-                          : const Color(0xFFB0B8C1),
+                      ? appColors.textPrimary
+                      : const Color(0xFFB0B8C1),
                 ),
               ),
             ),

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:ncapp/theme/app_theme.dart';
 
 class SuggestedAdvanceDoc {
@@ -11,10 +11,14 @@ class AdvanceReqSuggestedDocsDialog extends StatelessWidget {
   final List<SuggestedAdvanceDoc> docs;
   final ValueChanged<SuggestedAdvanceDoc> onSelect;
 
-  const AdvanceReqSuggestedDocsDialog({required this.docs, required this.onSelect});
+  const AdvanceReqSuggestedDocsDialog({
+    required this.docs,
+    required this.onSelect,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Align(
       alignment: Alignment.topCenter,
       child: Padding(
@@ -23,7 +27,7 @@ class AdvanceReqSuggestedDocsDialog extends StatelessWidget {
           color: Colors.transparent,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: appColors.elevatedSurface,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
@@ -37,18 +41,17 @@ class AdvanceReqSuggestedDocsDialog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(16, 14, 16, 10),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
                   child: Text(
                     'Санал болгож буй баримтууд',
-                    style: TextStyle(fontSize: 14, color: AppTheme.textGrey),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: appColors.textSecondary,
+                    ),
                   ),
                 ),
-                const Divider(
-                  height: 1,
-                  thickness: 1,
-                  color: Color(0xFFF0F0F0),
-                ),
+                Divider(height: 1, thickness: 1, color: appColors.border),
                 for (int i = 0; i < docs.length; i++) ...[
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
@@ -60,18 +63,18 @@ class AdvanceReqSuggestedDocsDialog extends StatelessWidget {
                         children: [
                           Text(
                             docs[i].amount,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
-                              color: AppTheme.textDark,
+                              color: appColors.textPrimary,
                             ),
                           ),
                           const SizedBox(height: 2),
                           Text(
                             docs[i].account,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 14,
-                              color: AppTheme.textGrey,
+                              color: appColors.textSecondary,
                             ),
                           ),
                         ],
@@ -79,11 +82,7 @@ class AdvanceReqSuggestedDocsDialog extends StatelessWidget {
                     ),
                   ),
                   if (i < docs.length - 1)
-                    const Divider(
-                      height: 1,
-                      thickness: 1,
-                      color: Color(0xFFF0F0F0),
-                    ),
+                    Divider(height: 1, thickness: 1, color: appColors.border),
                 ],
                 const SizedBox(height: 4),
               ],
@@ -105,6 +104,7 @@ class AdvanceReqFilePickerDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Align(
       alignment: Alignment.centerRight,
       child: Padding(
@@ -114,7 +114,7 @@ class AdvanceReqFilePickerDialog extends StatelessWidget {
           child: Container(
             width: 200,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: appColors.elevatedSurface,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
@@ -132,21 +132,13 @@ class AdvanceReqFilePickerDialog extends StatelessWidget {
                   label: 'Зургын цомог',
                   onTap: () => onPick('IMG.2424.pdf'),
                 ),
-                const Divider(
-                  height: 1,
-                  thickness: 1,
-                  color: Color(0xFFF0F0F0),
-                ),
+                Divider(height: 1, thickness: 1, color: appColors.border),
                 _PickerOption(
                   icon: Icons.camera_alt_outlined,
                   label: 'Камер',
                   onTap: () => onPick('PHOTO.jpg'),
                 ),
-                const Divider(
-                  height: 1,
-                  thickness: 1,
-                  color: Color(0xFFF0F0F0),
-                ),
+                Divider(height: 1, thickness: 1, color: appColors.border),
                 _PickerOption(
                   icon: Icons.folder_outlined,
                   label: 'Файл сонгох',
@@ -174,6 +166,7 @@ class _PickerOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -183,10 +176,10 @@ class _PickerOption extends StatelessWidget {
           children: [
             Text(
               label,
-              style: const TextStyle(fontSize: 14, color: AppTheme.textDark),
+              style: TextStyle(fontSize: 14, color: appColors.textPrimary),
             ),
             const Spacer(),
-            Icon(icon, size: 22, color: AppTheme.textGrey),
+            Icon(icon, size: 22, color: appColors.textSecondary),
           ],
         ),
       ),
@@ -198,12 +191,13 @@ class _PickerOption extends StatelessWidget {
 //  Attachment bottom sheet — grid of uploaded files
 // ════════════════════════════════════════════════════════════
 
-
-
 class AdvanceReqDashedBorderPainter extends CustomPainter {
   final Color color;
   final double radius;
-  const AdvanceReqDashedBorderPainter({required this.color, required this.radius});
+  const AdvanceReqDashedBorderPainter({
+    required this.color,
+    required this.radius,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -235,6 +229,3 @@ class AdvanceReqDashedBorderPainter extends CustomPainter {
   bool shouldRepaint(AdvanceReqDashedBorderPainter old) =>
       old.color != color || old.radius != radius;
 }
-
-
-

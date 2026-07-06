@@ -11,12 +11,13 @@ class PaymentReqAttachmentSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return BottomSheetContainer(
       maxHeightFactor: 0.85,
       children: [
         const SizedBox(height: 16),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -24,18 +25,18 @@ class PaymentReqAttachmentSheet extends StatelessWidget {
               style: TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.w700,
-                color: AppTheme.textDark,
+                color: appColors.textPrimary,
               ),
             ),
           ),
         ),
         const SizedBox(height: 16),
         if (groups.isEmpty)
-          const Padding(
-            padding: EdgeInsets.all(32),
+          Padding(
+            padding: const EdgeInsets.all(32),
             child: Text(
               'Хавсаргасан файл байхгүй',
-              style: TextStyle(fontSize: 14, color: AppTheme.textGrey),
+              style: TextStyle(fontSize: 14, color: appColors.textSecondary),
             ),
           )
         else
@@ -59,6 +60,7 @@ class _GroupSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -78,10 +80,10 @@ class _GroupSection extends StatelessWidget {
                     children: [
                       Text(
                         group.personName,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: AppTheme.textDark,
+                          color: appColors.textPrimary,
                         ),
                       ),
                       if (group.personRole.isNotEmpty) ...[
@@ -97,10 +99,10 @@ class _GroupSection extends StatelessWidget {
                           ),
                           child: Text(
                             group.personRole,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              color: AppTheme.textGrey,
+                              color: appColors.textSecondary,
                             ),
                           ),
                         ),
@@ -109,9 +111,9 @@ class _GroupSection extends StatelessWidget {
                   ),
                   Text(
                     group.date,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
-                      color: AppTheme.textGrey,
+                      color: appColors.textSecondary,
                     ),
                   ),
                 ],
@@ -143,6 +145,7 @@ class _FileTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return InkWell(
       onTap: () => AttachmentFileOpener.open(context, file),
       borderRadius: BorderRadius.circular(8),
@@ -157,9 +160,9 @@ class _FileTile extends StatelessWidget {
                       file.url,
                       fit: BoxFit.cover,
                       width: double.infinity,
-                      errorBuilder: (_, _, _) => _placeholder(),
+                      errorBuilder: (_, _, _) => _placeholder(appColors),
                     )
-                  : _placeholder(),
+                  : _placeholder(appColors),
             ),
           ),
           const SizedBox(height: 4),
@@ -167,20 +170,20 @@ class _FileTile extends StatelessWidget {
             file.name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 11, color: AppTheme.textDark),
+            style: TextStyle(fontSize: 11, color: appColors.textPrimary),
           ),
         ],
       ),
     );
   }
 
-  Widget _placeholder() => Container(
-    color: const Color(0xFFF2F2F7),
-    child: const Center(
+  Widget _placeholder(AppThemeColors appColors) => Container(
+    color: appColors.subtleFill,
+    child: Center(
       child: Icon(
         Icons.insert_drive_file_outlined,
         size: 28,
-        color: AppTheme.textGrey,
+        color: appColors.textSecondary,
       ),
     ),
   );

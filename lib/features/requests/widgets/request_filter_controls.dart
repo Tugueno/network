@@ -15,27 +15,29 @@ class RequestsEmployeeFilterRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppTheme.borderColor),
+          border: Border.all(color: appColors.border),
         ),
         child: Row(
           children: [
             Expanded(
               child: Obx(() {
-                final selected =
-                    controller.employees.where((e) => e.isSelected.value).toList();
+                final selected = controller.employees
+                    .where((e) => e.isSelected.value)
+                    .toList();
                 if (selected.isEmpty) {
-                  return const Text(
+                  return Text(
                     'Бүх ажилчин',
                     style: TextStyle(
                       fontSize: 14,
-                      color: AppTheme.textGrey,
+                      color: appColors.textSecondary,
                       fontWeight: FontWeight.w400,
                     ),
                   );
@@ -46,17 +48,16 @@ class RequestsEmployeeFilterRow extends StatelessWidget {
                     : '';
                 return Text(
                   '$names$extra',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
-                    color: AppTheme.textDark,
+                    color: appColors.textPrimary,
                     fontWeight: FontWeight.w500,
                   ),
                   overflow: TextOverflow.ellipsis,
                 );
               }),
             ),
-            const Icon(Icons.chevron_right,
-                size: 20, color: AppTheme.textGrey),
+            Icon(Icons.chevron_right, size: 20, color: appColors.textSecondary),
           ],
         ),
       ),
@@ -69,27 +70,32 @@ class RequestsFilterChip extends StatelessWidget {
   final String label;
   final bool selected;
   final VoidCallback onTap;
-  const RequestsFilterChip(
-      {required this.label, required this.selected, required this.onTap});
+  const RequestsFilterChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: selected ? AppTheme.primary : Colors.white,
+          color: selected ? AppTheme.primary : appColors.cardBackground,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-              color: selected ? AppTheme.primary : AppTheme.borderColor),
+            color: selected ? AppTheme.primary : appColors.border,
+          ),
         ),
         child: Text(
           label,
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: selected ? Colors.white : AppTheme.textGrey,
+            color: selected ? Colors.white : appColors.textSecondary,
           ),
         ),
       ),
@@ -101,20 +107,25 @@ class RequestsTypeChip extends StatelessWidget {
   final RequestType type;
   final bool selected;
   final VoidCallback onTap;
-  const RequestsTypeChip(
-      {required this.type, required this.selected, required this.onTap});
+  const RequestsTypeChip({
+    required this.type,
+    required this.selected,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: selected ? AppTheme.primary : Colors.white,
+          color: selected ? AppTheme.primary : appColors.cardBackground,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-              color: selected ? AppTheme.primary : AppTheme.borderColor),
+            color: selected ? AppTheme.primary : appColors.border,
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -122,7 +133,7 @@ class RequestsTypeChip extends StatelessWidget {
             Icon(
               type.icon,
               size: 16,
-              color: selected ? Colors.white : AppTheme.textGrey,
+              color: selected ? Colors.white : appColors.textSecondary,
             ),
             const SizedBox(width: 6),
             Text(
@@ -130,7 +141,7 @@ class RequestsTypeChip extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
-                color: selected ? Colors.white : AppTheme.textGrey,
+                color: selected ? Colors.white : appColors.textSecondary,
               ),
             ),
           ],

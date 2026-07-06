@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:ncapp/core/utils/format.dart';
 import 'package:ncapp/core/widgets/app_card.dart';
 import 'package:ncapp/features/advance_req/advance_req_model.dart';
@@ -10,6 +10,7 @@ class AdvanceReqInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return AppCard(
       child: Column(
         children: [
@@ -31,38 +32,38 @@ class AdvanceReqInfoCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 10),
-                const Text(
+                Text(
                   'Үлдэгдэл:',
-                  style: TextStyle(fontSize: 14, color: AppTheme.textDark),
+                  style: TextStyle(fontSize: 14, color: appColors.textPrimary),
                 ),
                 const Spacer(),
                 Text(
                   formatTugrik(item.remainingAmount),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textDark,
+                    color: appColors.textPrimary,
                   ),
                 ),
               ],
             ),
           ),
-          const Divider(height: 1, thickness: 1, color: Color(0xFFF0F0F0)),
+          Divider(height: 1, thickness: 1, color: appColors.border),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
             child: Row(
               children: [
-                const Text(
+                Text(
                   'Нийт хаах:',
-                  style: TextStyle(fontSize: 14, color: AppTheme.textDark),
+                  style: TextStyle(fontSize: 14, color: appColors.textPrimary),
                 ),
                 const Spacer(),
                 Text(
                   formatTugrik(item.totalCloseAmount),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textDark,
+                    color: appColors.textPrimary,
                   ),
                 ),
               ],
@@ -91,6 +92,7 @@ class AdvanceReqAttachmentHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -109,12 +111,12 @@ class AdvanceReqAttachmentHeader extends StatelessWidget {
                 ),
               ),
             ],
-            const Text(
+            Text(
               'Хавсаргасан баримтууд',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppTheme.textDark,
+                color: appColors.textPrimary,
               ),
             ),
             const Spacer(),
@@ -123,14 +125,14 @@ class AdvanceReqAttachmentHeader extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: hasNew ? AppTheme.primary : AppTheme.textGrey,
+                color: hasNew ? AppTheme.primary : appColors.textSecondary,
               ),
             ),
             const SizedBox(width: 4),
-            const Icon(
+            Icon(
               Icons.keyboard_arrow_down,
               size: 20,
-              color: AppTheme.textGrey,
+              color: appColors.textSecondary,
             ),
           ],
         ),
@@ -143,15 +145,18 @@ class AdvanceReqAttachmentHeader extends StatelessWidget {
 //  Document form card — owns all form state
 // ════════════════════════════════════════════════════════════
 
-
 class AdvanceReqSubmitBar extends StatelessWidget {
   final bool isSubmitted;
   final VoidCallback onSubmit;
 
-  const AdvanceReqSubmitBar({required this.isSubmitted, required this.onSubmit});
+  const AdvanceReqSubmitBar({
+    required this.isSubmitted,
+    required this.onSubmit,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Container(
       padding: EdgeInsets.fromLTRB(
         16,
@@ -159,7 +164,7 @@ class AdvanceReqSubmitBar extends StatelessWidget {
         16,
         MediaQuery.of(context).padding.bottom + 12,
       ),
-      color: Colors.white,
+      color: appColors.cardBackground,
       child: ElevatedButton(
         onPressed: onSubmit,
         child: Text(isSubmitted ? 'Шинээр шалгах' : 'Шалгах'),
@@ -177,11 +182,12 @@ class AdvanceReqSuccessToast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Center(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: appColors.elevatedSurface,
           borderRadius: BorderRadius.circular(100),
           boxShadow: [
             BoxShadow(
@@ -191,17 +197,17 @@ class AdvanceReqSuccessToast extends StatelessWidget {
             ),
           ],
         ),
-        child: const Row(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.check_circle, size: 22, color: Color(0xFF34C759)),
-            SizedBox(width: 8),
+            const Icon(Icons.check_circle, size: 22, color: Color(0xFF34C759)),
+            const SizedBox(width: 8),
             Text(
               'Урдчилгаа амжилттай хаагдлаа.',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppTheme.textDark,
+                color: appColors.textPrimary,
               ),
             ),
           ],
@@ -214,5 +220,3 @@ class AdvanceReqSuccessToast extends StatelessWidget {
 // ════════════════════════════════════════════════════════════
 //  Suggested docs dialog — positioned dropdown at top
 // ════════════════════════════════════════════════════════════
-
-

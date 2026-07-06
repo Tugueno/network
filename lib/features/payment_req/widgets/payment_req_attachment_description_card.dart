@@ -16,6 +16,7 @@ class PaymentReqAttachmentDescriptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return AppCard(
       width: double.infinity,
       radius: 12,
@@ -31,19 +32,19 @@ class PaymentReqAttachmentDescriptionCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.attach_file,
                       size: 20,
-                      color: AppTheme.textGrey,
+                      color: appColors.textSecondary,
                     ),
                     const SizedBox(width: 8),
-                    const Expanded(
+                    Expanded(
                       child: Text(
                         'Хавсаргасан',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: AppTheme.textDark,
+                          color: appColors.textPrimary,
                         ),
                       ),
                     ),
@@ -67,20 +68,20 @@ class PaymentReqAttachmentDescriptionCard extends StatelessWidget {
                         ),
                       ),
                     const SizedBox(width: 4),
-                    const Icon(
+                    Icon(
                       Icons.chevron_right,
                       size: 18,
-                      color: AppTheme.textGrey,
+                      color: appColors.textSecondary,
                     ),
                   ],
                 ),
               ),
             ),
           ),
-          const Divider(
+          Divider(
             height: 4,
             thickness: 4,
-            color: Color(0xFFF5F6FC),
+            color: appColors.screenBackground,
             endIndent: 0,
             indent: 0,
           ),
@@ -89,21 +90,21 @@ class PaymentReqAttachmentDescriptionCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   children: [
                     Icon(
                       Icons.chat_bubble_outline,
                       size: 20,
-                      color: AppTheme.textGrey,
+                      color: appColors.textSecondary,
                     ),
-                    SizedBox(width: 6),
+                    const SizedBox(width: 6),
                     Expanded(
                       child: Text(
                         'Тайлбар',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: AppTheme.textDark,
+                          color: appColors.textPrimary,
                         ),
                       ),
                     ),
@@ -114,14 +115,14 @@ class PaymentReqAttachmentDescriptionCard extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: AppTheme.bgColor,
+                    color: appColors.subtleFill,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     description,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
-                      color: AppTheme.textDark,
+                      color: appColors.textPrimary,
                     ),
                   ),
                 ),

@@ -199,6 +199,10 @@ class PaymentReqController extends GetxController {
   }
 
   void _showResultToast(String message) {
+    final context = Get.context;
+    final appColors = context == null
+        ? AppTheme.lightColors
+        : AppTheme.colors(context);
     Get.rawSnackbar(
       snackPosition: SnackPosition.TOP,
       backgroundColor: Colors.transparent,
@@ -210,7 +214,7 @@ class PaymentReqController extends GetxController {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: appColors.elevatedSurface,
             borderRadius: BorderRadius.circular(100),
             boxShadow: [
               BoxShadow(
@@ -232,10 +236,10 @@ class PaymentReqController extends GetxController {
               Flexible(
                 child: Text(
                   message,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textDark,
+                    color: appColors.textPrimary,
                   ),
                 ),
               ),

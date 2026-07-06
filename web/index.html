@@ -41,6 +41,29 @@
       background: #F9FAFF;
     }
   </style>
+  <script>
+    (function () {
+      const fallbackThemeColor = '#F9FAFF';
+
+      window.setThemeColor = function (color) {
+        const nextColor = color || fallbackThemeColor;
+        let meta = document.querySelector('meta[name="theme-color"]');
+
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute('name', 'theme-color');
+          document.head.appendChild(meta);
+        }
+
+        meta.setAttribute('content', nextColor);
+        document.documentElement.style.backgroundColor = nextColor;
+
+        if (document.body) {
+          document.body.style.backgroundColor = nextColor;
+        }
+      };
+    })();
+  </script>
 </head>
 <body>
   <!--

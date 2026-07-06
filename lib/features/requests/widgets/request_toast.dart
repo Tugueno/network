@@ -8,10 +8,11 @@ class RequestToast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Material(
       elevation: 6,
       borderRadius: BorderRadius.circular(30),
-      color: Colors.white,
+      color: appColors.elevatedSurface,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
@@ -22,10 +23,10 @@ class RequestToast extends StatelessWidget {
             Expanded(
               child: Text(
                 message,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: AppTheme.textDark,
+                  color: appColors.textPrimary,
                 ),
               ),
             ),

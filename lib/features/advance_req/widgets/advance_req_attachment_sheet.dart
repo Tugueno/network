@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:ncapp/core/widgets/bottom_sheet_container.dart';
 import 'package:ncapp/theme/app_theme.dart';
 
@@ -8,12 +8,13 @@ class AdvanceReqAttachmentSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return BottomSheetContainer(
       maxHeightFactor: 0.75,
       children: [
         const SizedBox(height: 16),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -21,7 +22,7 @@ class AdvanceReqAttachmentSheet extends StatelessWidget {
               style: TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.w700,
-                color: AppTheme.textDark,
+                color: appColors.textPrimary,
               ),
             ),
           ),
@@ -52,6 +53,7 @@ class _AttachmentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -59,30 +61,30 @@ class _AttachmentTile extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Container(
-              color: const Color(0xFFF2F2F7),
+              color: appColors.subtleFill,
               width: double.infinity,
-              child: const Center(
+              child: Center(
                 child: Icon(
                   Icons.receipt_long_outlined,
                   size: 32,
-                  color: AppTheme.textGrey,
+                  color: appColors.textSecondary,
                 ),
               ),
             ),
           ),
         ),
         const SizedBox(height: 4),
-        const Text(
+        Text(
           "27'000₮",
           style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w600,
-            color: AppTheme.textDark,
+            color: appColors.textPrimary,
           ),
         ),
-        const Text(
+        Text(
           '05/20/2026',
-          style: TextStyle(fontSize: 10, color: AppTheme.textGrey),
+          style: TextStyle(fontSize: 10, color: appColors.textSecondary),
         ),
       ],
     );
@@ -92,5 +94,3 @@ class _AttachmentTile extends StatelessWidget {
 // ════════════════════════════════════════════════════════════
 //  Dashed border painter
 // ════════════════════════════════════════════════════════════
-
-

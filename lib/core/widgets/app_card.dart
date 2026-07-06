@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ncapp/theme/app_theme.dart';
 
-class AppCard extends StatelessWidget{
+class AppCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
@@ -20,13 +21,14 @@ class AppCard extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Container(
       width: width,
       padding: padding,
       margin: margin,
       clipBehavior: clip ? Clip.antiAlias : Clip.none,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(radius),
       ),
       child: child,

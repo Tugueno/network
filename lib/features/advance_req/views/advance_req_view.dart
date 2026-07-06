@@ -15,6 +15,7 @@ class AdvanceReqView extends GetView<AdvanceReqController> {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     final openDetailInRoute = AppBreakpoints.shouldOpenDetailInRoute(
       MediaQuery.sizeOf(context).width,
     );
@@ -62,19 +63,19 @@ class AdvanceReqView extends GetView<AdvanceReqController> {
                   width: AppBreakpoints.shellListPaneWidth,
                   child: listCol,
                 ),
-                const VerticalDivider(
+                VerticalDivider(
                   width: 1,
                   thickness: 1,
-                  color: AppTheme.borderColor,
+                  color: appColors.border,
                 ),
                 Expanded(
                   child: controller.selectedItem.value == null
-                      ? const Center(
+                      ? Center(
                           child: Text(
                             'Хүсэлт сонгоно уу',
                             style: TextStyle(
                               fontSize: 14,
-                              color: AppTheme.textGrey,
+                              color: appColors.textSecondary,
                             ),
                           ),
                         )
@@ -122,12 +123,13 @@ class _SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return Text(
       label,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w600,
-        color: AppTheme.textGrey,
+        color: appColors.textSecondary,
       ),
     );
   }
@@ -142,17 +144,14 @@ class _ItemGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return AppCard(
       clip: true,
       child: Column(
         children: [
           for (int i = 0; i < items.length; i++) ...[
             if (i > 0)
-              Divider(
-                height: 1,
-                thickness: 1,
-                color: AppTheme.textGrey.withValues(alpha: 0.15),
-              ),
+              Divider(height: 1, thickness: 1, color: appColors.border),
             _AdvanceTile(item: items[i], openDetailInRoute: openDetailInRoute),
           ],
         ],
@@ -172,6 +171,7 @@ class _AdvanceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => Get.find<AdvanceReqController>().openDetail(
@@ -193,19 +193,19 @@ class _AdvanceTile extends StatelessWidget {
                 children: [
                   Text(
                     item.id,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: AppTheme.textDark,
+                      color: appColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 3),
                   Text(
                     item.date,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: AppTheme.textGrey,
+                      color: appColors.textSecondary,
                     ),
                   ),
                 ],
@@ -218,25 +218,25 @@ class _AdvanceTile extends StatelessWidget {
               children: [
                 Text(
                   formatTugrik(item.usedAmount),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: AppTheme.textGrey,
+                    color: appColors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   '/${formatTugrik(item.totalAmount)}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textGrey,
+                    color: appColors.textSecondary,
                   ),
                 ),
               ],
             ),
             const SizedBox(width: 4),
-            const Icon(Icons.chevron_right, size: 24, color: AppTheme.textGrey),
+            Icon(Icons.chevron_right, size: 24, color: appColors.textSecondary),
           ],
         ),
       ),

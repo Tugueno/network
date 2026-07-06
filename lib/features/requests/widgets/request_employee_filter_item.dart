@@ -15,22 +15,22 @@ class RequestEmployeeFilterItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: const BoxDecoration(
-          border: Border(
-            bottom: BorderSide(color: Color(0xFFF0F0F0), width: 1),
-          ),
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: appColors.border, width: 1)),
         ),
         child: Row(
           children: [
             CircleAvatar(
               radius: 22,
               backgroundColor: AppTheme.primaryLight.withValues(alpha: 0.15),
-              backgroundImage:
-                  employee.avatarUrl != null ? NetworkImage(employee.avatarUrl!) : null,
+              backgroundImage: employee.avatarUrl != null
+                  ? NetworkImage(employee.avatarUrl!)
+                  : null,
               child: employee.avatarUrl == null
                   ? Text(
                       employee.name[0],
@@ -49,16 +49,19 @@ class RequestEmployeeFilterItem extends StatelessWidget {
                 children: [
                   Text(
                     employee.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
-                      color: AppTheme.textDark,
+                      color: appColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     employee.role,
-                    style: const TextStyle(fontSize: 12, color: AppTheme.textGrey),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: appColors.textSecondary,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -72,7 +75,7 @@ class RequestEmployeeFilterItem extends StatelessWidget {
                     : Icons.radio_button_off,
                 color: employee.isSelected.value
                     ? AppTheme.primary
-                    : AppTheme.textGrey,
+                    : appColors.textSecondary,
                 size: 20,
               ),
             ),

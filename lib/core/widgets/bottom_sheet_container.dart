@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ncapp/core/widgets/sheet_handle.dart';
+import 'package:ncapp/theme/app_theme.dart';
 
 /// Бүх bottom sheet-д давтагддаг гадна бүрхүүл:
 /// цагаан дэвсгэр, дээд талдаа дугуй булан, ба [SheetHandle] (чирэх бариул).
@@ -21,10 +22,11 @@ class BottomSheetContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
     Widget box = Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: appColors.sheetBackground,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
