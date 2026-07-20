@@ -32,6 +32,8 @@ dependencies:
   shared_preferences: ^2.2.2
   get: ^4.6.6
   dio: ^5.7.0
+  file_picker: ^11.0.2
+  image_picker: ^1.2.3
   open_file: ^3.5.10
   path_provider: ^2.1.5
   flutter:
@@ -43,8 +45,6 @@ dependencies:
   cupertino_native: ^0.1.1
   font_awesome_flutter: ^11.0.0
   google_fonts: ^6.2.1
-  liquid_glass_renderer: ^0.2.0-dev.4
-  flutter_liquid_glass_plus: ^0.0.7
 
 dev_dependencies:
   flutter_test:
@@ -57,10 +57,6 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
-
-dependency_overrides:
-  liquid_glass_renderer:
-    path: third_party/liquid_glass_renderer
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

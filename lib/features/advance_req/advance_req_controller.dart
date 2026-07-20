@@ -36,6 +36,7 @@ class AdvanceReqController extends GetxController {
     }
   }
 
+  @override
   Future<void> refresh() => _load();
 
   Future<void> openDetail(

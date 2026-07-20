@@ -10,6 +10,8 @@ import 'package:ncapp/theme/app_theme.dart';
 import 'package:ncapp/widgets/app_scaffold.dart';
 import 'advance_req_detail_view.dart';
 
+const double _bottomNavigationClearance = 132;
+
 class AdvanceReqView extends GetView<AdvanceReqController> {
   const AdvanceReqView({super.key});
 
@@ -97,7 +99,12 @@ class AdvanceReqView extends GetView<AdvanceReqController> {
       onRefresh: controller.refresh,
       child: ListView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          _bottomNavigationClearance,
+        ),
         children: [
           if (pending.isNotEmpty) ...[
             _SectionHeader(label: 'Үлдэгдэлтэй нийт ${pending.length}'),

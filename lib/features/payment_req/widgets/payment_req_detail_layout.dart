@@ -130,26 +130,28 @@ class _PrimaryDetailContent extends StatelessWidget {
       children: [
         PaymentReqDetailHeader(item: item),
         Padding(
-          padding: EdgeInsets.fromLTRB(16, 12, 16, bottomPadding),
-          child: Column(
-            children: [
-              PaymentReqAttachmentDescriptionCard(
-                count: item.attachmentCount,
-                description: item.description,
-                onAttachmentTap: () => showAdaptiveModal(
-                  context: context,
-                  maxWidth: 560,
-                  builder: (_) =>
-                      PaymentReqAttachmentSheet(groups: item.attachmentGroups),
-                ),
-              ),
-              if (includeApprovalFlow) ...[
-                const SizedBox(height: 12),
-                PaymentReqApprovalFlow(steps: item.approvalSteps),
-              ],
-            ],
+          padding: EdgeInsets.fromLTRB(
+            16,
+            12,
+            16,
+            includeApprovalFlow ? 0 : bottomPadding,
+          ),
+          child: PaymentReqAttachmentDescriptionCard(
+            count: item.attachmentCount,
+            description: item.description,
+            onAttachmentTap: () => showAdaptiveModal(
+              context: context,
+              maxWidth: 560,
+              builder: (_) =>
+                  PaymentReqAttachmentSheet(groups: item.attachmentGroups),
+            ),
           ),
         ),
+        if (includeApprovalFlow) ...[
+          const SizedBox(height: 12),
+          PaymentReqApprovalFlow(steps: item.approvalSteps),
+          SizedBox(height: bottomPadding),
+        ],
       ],
     );
   }

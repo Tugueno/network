@@ -26,7 +26,9 @@ class PaymentReqDetailHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final appColors = AppTheme.colors(context);
     return AppCard(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
+      radius: 0,
+      clip: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

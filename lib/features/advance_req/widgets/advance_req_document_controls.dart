@@ -8,6 +8,7 @@ class AdvanceReqDocumentTabSelector extends StatelessWidget {
   final ValueChanged<int> onSelect;
 
   const AdvanceReqDocumentTabSelector({
+    super.key,
     required this.tabs,
     required this.selectedIndex,
     required this.onSelect,
@@ -61,7 +62,11 @@ class SuggestedAdvanceDocsRow extends StatelessWidget {
   final int count;
   final VoidCallback onTap;
 
-  const SuggestedAdvanceDocsRow({required this.count, required this.onTap});
+  const SuggestedAdvanceDocsRow({
+    super.key,
+    required this.count,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -101,10 +106,11 @@ class SuggestedAdvanceDocsRow extends StatelessWidget {
 
 class AdvanceReqFileUploadBox extends StatelessWidget {
   final String? attachedFile;
-  final VoidCallback onPick;
+  final ValueChanged<String> onPick;
   final VoidCallback onRemove;
 
   const AdvanceReqFileUploadBox({
+    super.key,
     required this.attachedFile,
     required this.onPick,
     required this.onRemove,
@@ -114,46 +120,21 @@ class AdvanceReqFileUploadBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final hasFile = attachedFile != null;
 
-    return GestureDetector(
-      onTap: hasFile ? null : onPick,
-      child: CustomPaint(
-        painter: AdvanceReqDashedBorderPainter(
-          color: AppTheme.primary,
-          radius: 10,
-        ),
-        child: SizedBox(
-          width: double.infinity,
-          height: 52,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: hasFile
-                ? _AttachedFileRow(file: attachedFile!, onRemove: onRemove)
-                : const _UploadPrompt(),
-          ),
+    return CustomPaint(
+      painter: AdvanceReqDashedBorderPainter(
+        color: AppTheme.primary,
+        radius: 10,
+      ),
+      child: SizedBox(
+        width: double.infinity,
+        height: 52,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: hasFile
+              ? _AttachedFileRow(file: attachedFile!, onRemove: onRemove)
+              : AdvanceReqFileUploadPrompt(onPick: onPick),
         ),
       ),
-    );
-  }
-}
-
-class _UploadPrompt extends StatelessWidget {
-  const _UploadPrompt();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Row(
-      children: [
-        Icon(Icons.upload_outlined, size: 20, color: AppTheme.primary),
-        SizedBox(width: 10),
-        Text(
-          'Файл хавсаргах',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: AppTheme.primary,
-          ),
-        ),
-      ],
     );
   }
 }
@@ -201,7 +182,7 @@ class _AttachedFileRow extends StatelessWidget {
 // ════════════════════════════════════════════════════════════
 
 class AdvanceReqOcrWarningBox extends StatelessWidget {
-  const AdvanceReqOcrWarningBox();
+  const AdvanceReqOcrWarningBox({super.key});
 
   @override
   Widget build(BuildContext context) {

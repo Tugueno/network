@@ -11,7 +11,6 @@ import 'package:ncapp/features/payment_req/views/payment_req_detail_view.dart';
 import 'package:ncapp/features/advance_req/advance_req_binding.dart';
 import 'package:ncapp/features/advance_req/views/advance_req_detail_view.dart';
 import 'package:ncapp/theme/app_system_ui.dart';
-import 'package:ncapp/widgets/main_tab_navigation_bar.dart';
 import 'theme/app_theme.dart';
 import 'app/app_routes.dart';
 import 'bindings/auth_binding.dart';

@@ -1,21 +1,15 @@
+import 'package:cupertino_native/cupertino_native.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:ncapp/app/app_routes.dart';
-import 'package:ncapp/controllers/auth_controller.dart';
-import 'package:ncapp/controllers/main_tab_controller.dart';
+import 'package:flutter/services.dart';
 import 'package:ncapp/features/advance_req/views/advance_req_view.dart';
 import 'package:ncapp/features/payment_req/views/payment_req_view.dart';
-import 'package:ncapp/features/requests/requests_controller.dart';
 import 'package:ncapp/features/requests/views/requests_view.dart';
 import 'package:ncapp/theme/app_system_ui.dart';
 import 'package:ncapp/theme/app_theme.dart';
 import 'package:ncapp/views/home/home_view.dart';
-import 'package:ncapp/widgets/liquid_glass_navigation_bar.dart'
-    show LiquidGlassTabIndicatorState;
-import 'package:ncapp/widgets/main_tab_navigation_bar.dart';
 
-const Color _homeLightStatusBarColor = Color(0xFFF9FAFF);
-const Color _homeLightNavigationBarColor = Color(0xFFF6F2FF);
+enum MainTab { home, advanceReq, requests, paymentReq, profile }
 
 class MainTabShell extends StatefulWidget {
   final MainTab initialTab;
@@ -27,258 +21,116 @@ class MainTabShell extends StatefulWidget {
 }
 
 class _MainTabShellState extends State<MainTabShell> {
-  static const _tabCount = 4;
+  late int _currentIndex;
 
-  late final PageController _pageController;
-  late final ValueNotifier<LiquidGlassTabIndicatorState> _indicatorState;
-  late int _selectedIndex;
-  late int _activeTabIndex;
-
-  int _tapReactionId = 0;
+  static const List<Widget> _pages = [
+    HomeView(),
+    AdvanceReqView(),
+    RequestsView(),
+    PaymentReqView(),
+    _ProfileView(),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.initialTab.index;
-    _activeTabIndex = _selectedIndex;
-    _pageController = PageController(initialPage: _selectedIndex)
-      ..addListener(_handlePageScroll);
-    _indicatorState = ValueNotifier(
-      LiquidGlassTabIndicatorState.centered(_selectedIndex),
-    );
-    _syncController();
+    _currentIndex = widget.initialTab.index;
   }
 
   @override
   void didUpdateWidget(covariant MainTabShell oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.initialTab != widget.initialTab) {
-      _jumpToTab(widget.initialTab.index, animateIndicator: false);
+      _currentIndex = widget.initialTab.index;
     }
   }
 
-  @override
-  void dispose() {
-    _pageController
-      ..removeListener(_handlePageScroll)
-      ..dispose();
-    _indicatorState.dispose();
-    super.dispose();
-  }
-
-  void _logout() {
-    try {
-      Get.find<AuthController>().logout();
-    } catch (_) {}
-    Get.offAllNamed(AppRoutes.auth);
-  }
-
-  void _handlePageScroll() {
-    if (!_pageController.hasClients) return;
-
-    final page = _pageController.page ?? _selectedIndex.toDouble();
-    final position = page.clamp(0.0, _tabCount - 1.0).toDouble();
-    _setIndicatorState(
-      position: position,
-      activeIndex: _activeTabIndex,
-      animate: false,
-      preserveAnimationIfSamePosition: true,
-    );
-  }
-
-  void _handlePageChanged(int index) {
-    if (index < 0 || index >= _tabCount || index == _selectedIndex) {
+  void _selectTab(int index) {
+    if (index == _currentIndex || index < 0 || index >= _pages.length) {
       return;
     }
 
-    setState(() => _selectedIndex = index);
-    _syncController();
+    setState(() {
+      _currentIndex = index;
+    });
   }
 
-  bool _handlePageScrollEnd(ScrollEndNotification notification) {
-    if (!_pageController.hasClients) return false;
+  void _applySystemUiForCurrentTab(BuildContext context) {
+    final appColors = AppTheme.colors(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final tab = MainTab.values[_currentIndex];
 
-    final page = _pageController.page ?? _selectedIndex.toDouble();
-    final targetIndex = page.round().clamp(0, _tabCount - 1).toInt();
-    if (_selectedIndex != targetIndex || _activeTabIndex != targetIndex) {
-      setState(() {
-        _selectedIndex = targetIndex;
-        _activeTabIndex = targetIndex;
-      });
-      _syncController();
-    }
-    _tapReactionId++;
-    _setIndicatorState(
-      position: targetIndex.toDouble(),
-      activeIndex: targetIndex,
-      animate: true,
-      reactionId: _tapReactionId,
-    );
-    return false;
-  }
+    final overlayStyle = tab == MainTab.home
+        ? SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: isDark
+                ? Brightness.light
+                : Brightness.dark,
+            statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+            systemNavigationBarColor: Colors.transparent,
+            systemNavigationBarDividerColor: Colors.transparent,
+            systemNavigationBarIconBrightness: isDark
+                ? Brightness.light
+                : Brightness.dark,
+          )
+        : AppSystemUi.forPageBackground(
+            bgColor: tab == MainTab.requests
+                ? appColors.subtleFill
+                : appColors.screenBackground,
+            isDark: isDark,
+            navigationBarColor: tab == MainTab.requests
+                ? appColors.subtleFill
+                : appColors.screenBackground,
+          );
 
-  void _jumpToTab(int index, {required bool animateIndicator}) {
-    if (index < 0 || index >= _tabCount) return;
-
-    if (animateIndicator) {
-      _tapReactionId++;
-    }
-
-    if (_selectedIndex != index || _activeTabIndex != index) {
-      setState(() {
-        _selectedIndex = index;
-        _activeTabIndex = index;
-      });
-      _syncController();
-    }
-
-    _setIndicatorState(
-      position: index.toDouble(),
-      activeIndex: index,
-      animate: animateIndicator,
-      reactionId: _tapReactionId,
-    );
-
-    if (_pageController.hasClients) {
-      _pageController.jumpToPage(index);
-    }
-  }
-
-  void _handleTabTap(int index) {
-    _jumpToTab(index, animateIndicator: true);
-  }
-
-  void _setIndicatorState({
-    required double position,
-    required int activeIndex,
-    required bool animate,
-    double stretch = 0,
-    int? reactionId,
-    bool preserveAnimationIfSamePosition = false,
-  }) {
-    final current = _indicatorState.value;
-    final next = LiquidGlassTabIndicatorState(
-      position: position.clamp(0.0, _tabCount - 1.0).toDouble(),
-      activeIndex: activeIndex.clamp(0, _tabCount - 1).toInt(),
-      animate: animate,
-      stretch: stretch.clamp(-0.48, 0.48).toDouble(),
-      reactionId: reactionId ?? current.reactionId,
-    );
-
-    final samePosition = (current.position - next.position).abs() < 0.001;
-    final sameActiveIndex = current.activeIndex == next.activeIndex;
-    final sameStretch = (current.stretch - next.stretch).abs() < 0.001;
-    final sameReaction = current.reactionId == next.reactionId;
-    if (samePosition && sameActiveIndex && sameStretch && sameReaction) {
-      if (preserveAnimationIfSamePosition || current.animate == next.animate) {
-        return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        AppSystemUi.apply(overlayStyle);
       }
-    }
-
-    _indicatorState.value = next;
-  }
-
-  void _syncController() {
-    if (!Get.isRegistered<MainTabController>()) return;
-    Get.find<MainTabController>().selectTab(MainTab.values[_selectedIndex]);
-  }
-
-  int get _requestsSelectedCount {
-    try {
-      return Get.find<RequestsController>().selectedCount;
-    } catch (_) {
-      return 0;
-    }
-  }
-
-  MainTab get _selectedTab {
-    final index = _selectedIndex.clamp(0, _tabCount - 1).toInt();
-    return MainTab.values[index];
-  }
-
-  Color _statusBarColorForSelectedTab(BuildContext context) {
-    final appColors = AppTheme.colors(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    switch (_selectedTab) {
-      case MainTab.home:
-        return isDark ? appColors.screenBackground : _homeLightStatusBarColor;
-      case MainTab.requests:
-        return appColors.subtleFill;
-      case MainTab.advanceReq:
-      case MainTab.paymentReq:
-        return appColors.screenBackground;
-    }
-  }
-
-  Color _navigationBarColorForSelectedTab(BuildContext context) {
-    final appColors = AppTheme.colors(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    switch (_selectedTab) {
-      case MainTab.home:
-        return isDark
-            ? appColors.screenBackground
-            : _homeLightNavigationBarColor;
-      case MainTab.requests:
-        return appColors.subtleFill;
-      case MainTab.advanceReq:
-      case MainTab.paymentReq:
-        return appColors.screenBackground;
-    }
-  }
-
-  Widget? _buildNavigationBar() {
-    final navigationBar = MainTabNavigationBar(
-      indicatorState: _indicatorState,
-      onTabSelected: _handleTabTap,
-      onLogout: _logout,
-    );
-
-    if (_selectedIndex != MainTab.requests.index) {
-      return navigationBar;
-    }
-
-    return Obx(
-      () =>
-          _requestsSelectedCount == 0 ? navigationBar : const SizedBox.shrink(),
-    );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final navigationBar = _buildNavigationBar();
-    final statusBarColor = _statusBarColorForSelectedTab(context);
-    final navigationBarColor = _navigationBarColorForSelectedTab(context);
-    final bottomNavigationBar = navigationBar == null
-        ? null
-        : SafeArea(
-            top: false,
-            minimum: const EdgeInsets.fromLTRB(14, 0, 14, 24),
-            child: navigationBar,
-          );
+    _applySystemUiForCurrentTab(context);
 
-    return StatusAwarePage(
-      backgroundColor: statusBarColor,
-      navigationBarColor: navigationBarColor,
-      safeAreaTop: false,
-      safeAreaLeft: false,
-      safeAreaRight: false,
+    return Scaffold(
       extendBody: true,
-      resizeToAvoidBottomInset: false,
-      bottomNavigationBar: bottomNavigationBar,
-      child: NotificationListener<ScrollEndNotification>(
-        onNotification: _handlePageScrollEnd,
-        child: PageView(
-          controller: _pageController,
-          onPageChanged: _handlePageChanged,
-          physics: const BouncingScrollPhysics(),
-          children: const [
-            HomeView(),
-            AdvanceReqView(),
-            RequestsView(),
-            PaymentReqView(),
-          ],
+      backgroundColor: Colors.transparent,
+      body: IndexedStack(index: _currentIndex, children: _pages),
+      bottomNavigationBar: CNTabBar(
+        currentIndex: _currentIndex,
+        onTap: _selectTab,
+        tint: CupertinoColors.activeBlue,
+        backgroundColor: Colors.transparent,
+        items: const [
+          CNTabBarItem(label: 'Нүүр', icon: CNSymbol('house.fill')),
+          CNTabBarItem(label: 'Урьдчилгаа', icon: CNSymbol('creditcard.fill')),
+          CNTabBarItem(
+            label: 'Ирц',
+            icon: CNSymbol('calendar.badge.checkmark'),
+          ),
+          CNTabBarItem(label: 'Төлбөр', icon: CNSymbol('banknote.fill')),
+          CNTabBarItem(
+            label: 'Профайл',
+            icon: CNSymbol('person.crop.circle.fill'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProfileView extends StatelessWidget {
+  const _ProfileView();
+
+  @override
+  Widget build(BuildContext context) {
+    return const SafeArea(
+      child: Center(
+        child: Text(
+          'Профайл',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
         ),
       ),
     );

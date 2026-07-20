@@ -8,7 +8,7 @@ class RequestsEmployeeFilterRow extends StatelessWidget {
   final RequestsController controller;
   final VoidCallback onTap;
 
-  const RequestsEmployeeFilterRow({
+  const RequestsEmployeeFilterRow({super.key, 
     required this.controller,
     required this.onTap,
   });
@@ -70,7 +70,7 @@ class RequestsFilterChip extends StatelessWidget {
   final String label;
   final bool selected;
   final VoidCallback onTap;
-  const RequestsFilterChip({
+  const RequestsFilterChip({super.key, 
     required this.label,
     required this.selected,
     required this.onTap,
@@ -107,7 +107,7 @@ class RequestsTypeChip extends StatelessWidget {
   final RequestType type;
   final bool selected;
   final VoidCallback onTap;
-  const RequestsTypeChip({
+  const RequestsTypeChip({super.key, 
     required this.type,
     required this.selected,
     required this.onTap,

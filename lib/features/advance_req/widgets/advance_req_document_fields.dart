@@ -9,7 +9,7 @@ class AdvanceReqPartialSection extends StatelessWidget {
   final TextEditingController partialCtrl;
   final TextEditingController haakhDunCtrl;
 
-  const AdvanceReqPartialSection({
+  const AdvanceReqPartialSection({super.key, 
     required this.isPartial,
     required this.onToggle,
     required this.partialCtrl,
@@ -128,7 +128,7 @@ class AdvanceReqPartialSection extends StatelessWidget {
 
 class AdvanceReqCommentBox extends StatelessWidget {
   final TextEditingController controller;
-  const AdvanceReqCommentBox({required this.controller});
+  const AdvanceReqCommentBox({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +173,7 @@ class AdvanceReqLabelField extends StatelessWidget {
   final TextEditingController controller;
   final String placeholder;
 
-  const AdvanceReqLabelField({
+  const AdvanceReqLabelField({super.key, 
     required this.label,
     required this.controller,
     required this.placeholder,

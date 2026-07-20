@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../controllers/home_controller.dart';
 import '../../controllers/theme_controller.dart';
 import '../../theme/app_system_ui.dart';
@@ -10,6 +9,7 @@ import '../../widgets/network_logo.dart';
 const Color _homeGradientStart = Color(0xFFF9FAFF);
 const Color _homeGradientMiddle = Color(0xFFEFF3FF);
 const Color _homeSafeAreaBottomColor = Color(0xFFF6F2FF);
+const double _bottomNavigationClearance = 132;
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -21,47 +21,54 @@ class HomeView extends GetView<HomeController> {
     final statusBarColor = isDark
         ? appColors.screenBackground
         : _homeGradientStart;
-    final navigationBarColor = isDark
-        ? appColors.screenBackground
-        : _homeSafeAreaBottomColor;
-
     return StatusAwarePage(
       backgroundColor: statusBarColor,
-      navigationBarColor: navigationBarColor,
+      navigationBarColor: Colors.transparent,
+      safeAreaTop: false,
+      safeAreaLeft: false,
+      safeAreaRight: false,
       extendBody: true,
       child: _HomeBackground(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 124),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 720),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Center(child: NetworkLogo()),
-                const SizedBox(height: 44),
-                Obx(
-                  () => Text(
-                    'Сайн байна уу, ${controller.userName.value}!',
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w700,
-                      color: appColors.textPrimary,
-                      letterSpacing: -0.5,
+        child: SafeArea(
+          bottom: false,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(
+              24,
+              24,
+              24,
+              _bottomNavigationClearance,
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 720),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Center(child: NetworkLogo()),
+                  const SizedBox(height: 44),
+                  Obx(
+                    () => Text(
+                      'Сайн байна уу, ${controller.userName.value}!',
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w700,
+                        color: appColors.textPrimary,
+                        letterSpacing: -0.5,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Үндсэн үйлдлүүдээ доорх цэснээс сонгоно уу.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    height: 1.45,
-                    color: appColors.textSecondary,
+                  const SizedBox(height: 8),
+                  Text(
+                    'Үндсэн үйлдлүүдээ доорх цэснээс сонгоно уу.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      height: 1.45,
+                      color: appColors.textSecondary,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 28),
-                const _WelcomeGlassCard(),
-              ],
+                  const SizedBox(height: 28),
+                  const _WelcomeGlassCard(),
+                ],
+              ),
             ),
           ),
         ),
@@ -83,18 +90,14 @@ class _WelcomeGlassCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
-        color: appColors.cardBackground.withValues(alpha: isDark ? 0.82 : 0.64),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: isDark
-              ? appColors.border
-              : Colors.white.withValues(alpha: 0.86),
-        ),
+        border: Border.all(color: appColors.border),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primary.withValues(alpha: isDark ? 0.16 : 0.08),
-            blurRadius: 30,
-            offset: const Offset(0, 14),
+            color: Colors.black.withValues(alpha: isDark ? 0.22 : 0.06),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
           ),
         ],
       ),

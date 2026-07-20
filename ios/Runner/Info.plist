@@ -24,6 +24,10 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Камер ашиглан баримтын зураг авахад шаардлагатай.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Зургын цомгоос баримтын зураг сонгоход шаардлагатай.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>

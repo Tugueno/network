@@ -24,13 +24,13 @@ class ActionButtons extends StatelessWidget {
       color: Colors.transparent,
       child: ClipRect(
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+          filter: ImageFilter.blur(sigmaX: 1.5, sigmaY: 1.5),
           child: Container(
             padding: EdgeInsets.fromLTRB(
               16,
-              12,
+              5,
               16,
-              MediaQuery.of(context).padding.bottom + 24,
+              MediaQuery.of(context).padding.bottom + 10,
             ),
             color: appColors.cardBackground.withValues(alpha: 0.1),
             child: Row(
@@ -49,7 +49,7 @@ class ActionButtons extends StatelessWidget {
                         foregroundColor: AppTheme.error,
                       ),
                       child: const Text(
-                        'Цуцлах',
+                        'Буцаах',
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,

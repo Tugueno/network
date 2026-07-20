@@ -15,6 +15,8 @@ import 'payment_req_period_sheet.dart';
 import 'payment_req_detail_view.dart';
 import 'package:ncapp/core/widgets/app_card.dart';
 
+const double _bottomNavigationClearance = 132;
+
 class PaymentReqView extends GetView<PaymentReqController> {
   const PaymentReqView({super.key});
 
@@ -69,7 +71,12 @@ class PaymentReqView extends GetView<PaymentReqController> {
                     onRefresh: controller.fetchRequests,
                     child: ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                      padding: const EdgeInsets.fromLTRB(
+                        16,
+                        16,
+                        16,
+                        _bottomNavigationClearance,
+                      ),
                       children: [
                         _TotalCard(
                           status: controller.selectedFilter.value,

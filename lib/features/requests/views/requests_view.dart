@@ -11,6 +11,8 @@ import 'package:ncapp/features/requests/widgets/requests_tab_bar.dart';
 import 'package:ncapp/theme/app_theme.dart';
 import 'package:ncapp/widgets/app_scaffold.dart';
 
+const double _bottomNavigationClearance = 132;
+
 class RequestsView extends GetView<RequestsController> {
   const RequestsView({super.key});
 
@@ -73,7 +75,12 @@ class RequestsView extends GetView<RequestsController> {
                       onRefresh: controller.loadRequests,
                       child: ListView.separated(
                         physics: const AlwaysScrollableScrollPhysics(),
-                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+                        padding: const EdgeInsets.fromLTRB(
+                          16,
+                          8,
+                          16,
+                          _bottomNavigationClearance,
+                        ),
                         itemCount: list.length,
                         separatorBuilder: (_, _) => const SizedBox(height: 10),
                         itemBuilder: (_, i) => RequestCard(

@@ -33,7 +33,8 @@ class PaymentReqApprovalFlow extends StatelessWidget {
 
     final card = AppCard(
       padding: const EdgeInsets.all(16),
-      radius: 12,
+      radius: 0,
+      clip: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -43,25 +44,28 @@ class PaymentReqApprovalFlow extends StatelessWidget {
                 child: Text(
                   'Батлах урсгал',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: appColors.textPrimary,
                   ),
                 ),
               ),
               const SizedBox(width: 12),
-              Flexible(
-                child: GestureDetector(
-                  onTap: () => _showApprovalHistorySheet(context, steps),
-                  child: const Text(
-                    'Дэлгэрэнгүй харах',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.primary,
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: () => _showApprovalHistorySheet(context, steps),
+                    child: const Text(
+                      'Дэлгэрэнгүй харах',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.primary,
+                      ),
                     ),
                   ),
                 ),

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ncapp/core/widgets/app_chip.dart';
 import 'package:ncapp/core/widgets/app_text.dart';
 import 'package:ncapp/core/widgets/bottom_sheet_container.dart';
 import 'package:ncapp/features/payment_req/controllers/payment_req_controller.dart';
 import 'package:ncapp/theme/app_theme.dart';
+
+const double _periodOptionHeight = 38;
 
 class PaymentReqPeriodSheet extends StatefulWidget {
   const PaymentReqPeriodSheet({super.key});
@@ -133,10 +134,10 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 10,
             crossAxisSpacing: 8,
-            childAspectRatio: 2.7,
+            childAspectRatio: 2.08,
             children: [
               for (int m = now.month; m >= 1; m--)
-                AppChip(
+                _PeriodOptionChip(
                   label: '$m-р сар',
                   selected: _type == PeriodFilterType.month && _month == m,
                   onTap: () => setState(() {
@@ -163,10 +164,10 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 10,
             crossAxisSpacing: 8,
-            childAspectRatio: 4,
+            childAspectRatio: 2.95,
             children: [
               for (int q = currentQuarter; q >= 1; q--)
-                AppChip(
+                _PeriodOptionChip(
                   label: '$q-р улирал',
                   selected: _type == PeriodFilterType.quarter && _quarter == q,
                   onTap: () => setState(() {
@@ -382,6 +383,63 @@ class _PaymentReqPeriodSheetState extends State<PaymentReqPeriodSheet> {
         _type = PeriodFilterType.range;
       }
     });
+  }
+}
+
+// ── Period option chip ─────────────────────────────────────
+class _PeriodOptionChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _PeriodOptionChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final appColors = AppTheme.colors(context);
+    final borderColor = selected ? AppTheme.primary : appColors.border;
+    final textColor = selected ? AppTheme.primary : appColors.textSecondary;
+
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: label,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          height: _periodOptionHeight,
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+            color: selected
+                ? AppTheme.primary.withValues(alpha: 0.08)
+                : appColors.cardBackground,
+            borderRadius: BorderRadius.circular(100),
+            border: Border.all(color: borderColor, width: selected ? 1.3 : 1),
+          ),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              maxLines: 1,
+              softWrap: false,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                height: 1.2,
+                color: textColor,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

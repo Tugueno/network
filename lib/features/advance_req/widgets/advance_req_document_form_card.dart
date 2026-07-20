@@ -10,7 +10,7 @@ import 'package:ncapp/features/advance_req/widgets/advance_req_document_fields.d
 
 class AdvanceReqDocumentFormCard extends StatefulWidget {
   final bool isSubmitted;
-  const AdvanceReqDocumentFormCard({required this.isSubmitted});
+  const AdvanceReqDocumentFormCard({super.key, required this.isSubmitted});
 
   @override
   State<AdvanceReqDocumentFormCard> createState() =>
@@ -108,19 +108,6 @@ class _AdvanceReqDocumentFormCardState
     );
   }
 
-  void _openFilePicker() {
-    showDialog(
-      context: context,
-      barrierColor: Colors.black26,
-      builder: (_) => AdvanceReqFilePickerDialog(
-        onPick: (filename) {
-          Navigator.pop(context);
-          _onFilePicked(filename);
-        },
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return AppCard(
@@ -141,7 +128,7 @@ class _AdvanceReqDocumentFormCardState
           const SizedBox(height: 10),
           AdvanceReqFileUploadBox(
             attachedFile: _attachedFile,
-            onPick: _openFilePicker,
+            onPick: _onFilePicked,
             onRemove: _removeFile,
           ),
           if (_isReadFailed) ...[

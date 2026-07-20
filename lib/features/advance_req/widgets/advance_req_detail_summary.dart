@@ -6,7 +6,7 @@ import 'package:ncapp/theme/app_theme.dart';
 
 class AdvanceReqInfoCard extends StatelessWidget {
   final AdvanceReqModel item;
-  const AdvanceReqInfoCard({required this.item});
+  const AdvanceReqInfoCard({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,7 @@ class AdvanceReqAttachmentHeader extends StatelessWidget {
   final bool hasNew;
   final VoidCallback onTap;
 
-  const AdvanceReqAttachmentHeader({
+  const AdvanceReqAttachmentHeader({super.key, 
     required this.count,
     required this.hasNew,
     required this.onTap,
@@ -149,7 +149,7 @@ class AdvanceReqSubmitBar extends StatelessWidget {
   final bool isSubmitted;
   final VoidCallback onSubmit;
 
-  const AdvanceReqSubmitBar({
+  const AdvanceReqSubmitBar({super.key, 
     required this.isSubmitted,
     required this.onSubmit,
   });
@@ -178,7 +178,7 @@ class AdvanceReqSubmitBar extends StatelessWidget {
 // ════════════════════════════════════════════════════════════
 
 class AdvanceReqSuccessToast extends StatelessWidget {
-  const AdvanceReqSuccessToast();
+  const AdvanceReqSuccessToast({super.key});
 
   @override
   Widget build(BuildContext context) {

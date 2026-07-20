@@ -265,17 +265,21 @@ class RequestsController extends GetxController {
   static RequestType _mapType(String name) {
     final n = name.toLowerCase();
     if (n.contains('гадуур')) return RequestType.gaduurAjillasan;
-    if (n.contains('өвчн') || n.contains('эмчилгэ'))
+    if (n.contains('өвчн') || n.contains('эмчилгэ')) {
       return RequestType.uvchiniiChuluu;
+    }
     if (n.contains('цалингүй')) return RequestType.tsalinguiChuluu;
     if (n.contains('аав')) return RequestType.aaviin10Honog;
-    if (n.contains('ээлж') || n.contains('амралт'))
+    if (n.contains('ээлж') || n.contains('амралт')) {
       return RequestType.eeljiinAmralt;
+    }
     if (n.contains('төрсөн')) return RequestType.tursunUdriinChuluu;
-    if (n.contains('school') || n.contains('police'))
+    if (n.contains('school') || n.contains('police')) {
       return RequestType.schoolPolice;
-    if (n.contains('ар гэр') || n.contains('гачигдал'))
+    }
+    if (n.contains('ар гэр') || n.contains('гачигдал')) {
       return RequestType.arGeriin;
+    }
     return RequestType.ajillasan;
   }
 }
