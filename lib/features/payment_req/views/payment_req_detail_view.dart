@@ -43,42 +43,41 @@ class PaymentReqDetailView extends GetView<PaymentReqController> {
           ),
         );
       }
+
       final isWebLayout = AppBreakpoints.isDesktop(
         MediaQuery.sizeOf(context).width,
       );
-      final actionArea = PaymentReqDetailActionArea(
-        onReject: () => _showConfirmSheet(context, item, isApprove: false),
-        onApprove: () => _showConfirmSheet(context, item, isApprove: true),
-        compact: isWebLayout,
-      );
 
+      void onReject() => _showConfirmSheet(context, item, isApprove: false);
+      void onApprove() => _showConfirmSheet(context, item, isApprove: true);
+
+      // On web/desktop, PaymentReqDetailLayout renders its own sticky
+      // action bar internally now, scoped to the detail panel's own
+      // width (see _WebPaymentReqDetailLayout) — so this screen no
+      // longer builds a Stack/Positioned overlay or a bottomNavigationBar
+      // for that case. That overlay used to span the full window width
+      // (minus a fixed 16px margin), which is exactly what let the
+      // buttons bleed past the detail panel's actual edge.
+      //
+      // On mobile there's only a single full-width pane, so a plain
+      // Scaffold bottomNavigationBar remains correct and unchanged.
       return AppScaffold(
         extendBody: true,
         title: item.id,
         backgroundColor: AppTheme.screenBackground,
         appBarColor: Colors.white,
         onBack: () => controller.closeDetail(popRoute: true),
-        body: isWebLayout
-            ? Stack(
-                fit: StackFit.expand,
-                children: [
-                  PaymentReqDetailLayout(item: item),
-                  Positioned(
-                    left: 16,
-                    right: 16,
-                    bottom: 0,
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 720),
-                        child: actionArea,
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            : PaymentReqDetailLayout(item: item),
-        bottomNavigationBar: isWebLayout ? null : actionArea,
+        body: PaymentReqDetailLayout(
+          item: item,
+          onReject: onReject,
+          onApprove: onApprove,
+        ),
+        bottomNavigationBar: isWebLayout
+            ? null
+            : PaymentReqDetailActionArea(
+                onReject: onReject,
+                onApprove: onApprove,
+              ),
       );
     });
   }
