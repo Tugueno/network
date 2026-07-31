@@ -44,3 +44,10 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 .vercel
+
+# Python (backend/ereceipt-ml)
+backend/ereceipt-ml/__pycache__/
+backend/ereceipt-ml/*.pyc
+backend/ereceipt-ml/venv/
+backend/ereceipt-ml/.venv/
+backend/ereceipt-ml/receipt_data.db
