@@ -89,7 +89,11 @@ class _DetailBodyState extends State<_DetailBody> {
                 onTap: _openAttachments,
               ),
               const SizedBox(height: 12),
-              AdvanceReqDocumentFormCard(isSubmitted: _isSubmitted),
+              // Тэр үндсэн хуудасны Column эсвэл ListView дотор:
+              AdvanceReqDocumentFormCard(
+                key: advanceReqFormCardKey, // Энэ мөрийг заавал нэмж өгнө!
+                isSubmitted: _isSubmitted,    // (isSubmitted хувьсагчийн нэр таны код дээр өөр байж магадгүй)
+              ),
             ],
           ),
           if (_showToast)

@@ -4,6 +4,12 @@ import 'package:ncapp/core/widgets/app_card.dart';
 import 'package:ncapp/features/advance_req/advance_req_model.dart';
 import 'package:ncapp/theme/app_theme.dart';
 
+// 🌟 API ХОЛБОЛТЫН ТҮЛХҮҮРИЙГ АШИГЛАХЫН ТУЛД ФОРМ КАРТЫГ ЭНД ИМПОРТ ХИЙНЭ
+import 'package:ncapp/features/advance_req/widgets/advance_req_document_form_card.dart';
+
+// Үндсэн дэлгэц дээр дуудаж ашиглах GlobalKey (Форм карттай холбох зориулалттай нээлттэй түлхүүр)
+final GlobalKey<AdvanceReqDocumentFormCardState> advanceReqFormCardKey = GlobalKey<AdvanceReqDocumentFormCardState>();
+
 class AdvanceReqInfoCard extends StatelessWidget {
   final AdvanceReqModel item;
   const AdvanceReqInfoCard({super.key, required this.item});
@@ -166,7 +172,13 @@ class AdvanceReqSubmitBar extends StatelessWidget {
       ),
       color: appColors.cardBackground,
       child: ElevatedButton(
-        onPressed: onSubmit,
+        onPressed: () {
+          // 🌟 ЭНД "ШАЛГАХ" ТОВЧ ДАРАГДАХ ҮЕД ЦААНАА ФОРМ ДЭЭР БАЙГАА ӨГӨГДЛИЙГ SQLite РУУ ИЛГЕЭНЭ
+          advanceReqFormCardKey.currentState?.sendFeedbackToServer();
+          
+          // Таны апп-ын хуучин шалгах үйлдэл хэвээрээ ажиллана
+          onSubmit();
+        },
         child: Text(isSubmitted ? 'Шинээр шалгах' : 'Шалгах'),
       ),
     );
@@ -216,7 +228,3 @@ class AdvanceReqSuccessToast extends StatelessWidget {
     );
   }
 }
-
-// ════════════════════════════════════════════════════════════
-//  Suggested docs dialog — positioned dropdown at top
-// ════════════════════════════════════════════════════════════
